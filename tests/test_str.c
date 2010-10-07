@@ -4,42 +4,6 @@
 
 #include "libtest.h"
 
-TEST_DEF(test_matches)
-{
-        char buf[16];
-
-        snprintf(buf, sizeof(buf),
-                 "teststring");
-
-#define STR1 "teststring"
-        TEST_ASSERT(matches(buf, STR1),
-                    "matches (%s, %s) failed",
-                    buf, STR1);
-#undef STR1
-
-#define STR1 "test"
-        TEST_ASSERT(!matches(buf, STR1),
-                    "matches (%s, %s) failed",
-                    buf, STR1);
-#undef STR1
-}
-
-TEST_DEF(test_strxcpy_null)
-{
-        char buf[16] = "  d  ";
-        size_t ret;
-
-        ret = strxcpy(buf, sizeof(buf), NULL);
-
-        TEST_ASSERT(ret == 0,
-                    "Invalid return %zu !",
-                    ret);
-
-        TEST_ASSERT(strcmp(buf, "") == 0,
-                    "Invalid copy (%s) !",
-                    buf);
-}
-
 TEST_DEF(test_strxcpy)
 {
         unsigned int i;
@@ -82,6 +46,48 @@ TEST_DEF(test_strxcpy)
                             strs[i],
                             buf16);
         }
+}
+
+TEST_DEF(test_strxcpy_null)
+{
+        char buf[16] = "  d  ";
+        size_t ret;
+
+        ret = strxcpy(buf, sizeof(buf), NULL);
+
+        TEST_ASSERT(ret == 0,
+                    "Invalid return %zu !",
+                    ret);
+
+        TEST_ASSERT(strcmp(buf, "") == 0,
+                    "Invalid copy (%s) !",
+                    buf);
+}
+
+TEST_DEF(test_matches)
+{
+        char buf[16];
+
+        snprintf(buf, sizeof(buf),
+                 "teststring");
+
+#define STR1 "teststring"
+        TEST_ASSERT(matches(buf, STR1),
+                    "matches (%s, %s) failed",
+                    buf, STR1);
+#undef STR1
+
+#define STR1 "test"
+        TEST_ASSERT(!matches(buf, STR1),
+                    "matches (%s, %s) failed",
+                    buf, STR1);
+#undef STR1
+
+#define STR1 ""
+        TEST_ASSERT(!matches(buf, STR1),
+                    "matches (%s, %s) failed",
+                    buf, STR1);
+#undef STR1
 }
 
 TEST_DEF(test_strxcat)
