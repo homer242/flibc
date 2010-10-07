@@ -5,7 +5,6 @@
  *
  * \author Licensed under the GPL v2 as per the whole kernel source tree.
  * 
- * $Id$
  */
 
 #ifndef _FLC_LIST_H_
