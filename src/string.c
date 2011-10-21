@@ -2,6 +2,8 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 size_t sstrcpy(char *dst, size_t dst_size, const char *src)
 {
@@ -35,7 +37,35 @@ size_t sstrcpy(char *dst, size_t dst_size, const char *src)
                 ++s;
         }
 
-        return (s - src - 1); /* count does not include NULL */
+        return (size_t)(s - src - 1); /* count does not include NULL */
+}
+
+int svsprintf(char *dst, size_t size, const char *fmt, va_list args)
+{
+        int ret;
+
+        dst[size - 1] = '\0';
+
+	ret = vsnprintf(dst, size, fmt, args);
+	if(ret > (int)size - 1)
+	{
+		/* buffer has been truncated */
+		dst[size - 1] = '\0';
+	}
+
+	return ret;
+}
+
+int ssprintf(char *dst, size_t size, const char *fmt, ...)
+{
+        int ret;
+        va_list args;
+
+	va_start(args, fmt);
+	ret = svsprintf(dst, size, fmt, args);
+	va_end(args);
+
+	return ret;
 }
 
 size_t sstrcat(char *dst, size_t dst_size, const char *src)

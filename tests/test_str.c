@@ -139,6 +139,31 @@ TEST_DEF(test_sstrcat_null)
                     buf);
 }
 
+TEST_DEF(test_ssprintf_nullended)
+{
+        int ret;
+        char buf[16];
+        char fmt[17] = "0123456789123456";
+
+        ret = ssprintf(buf, sizeof(buf), fmt);
+
+        /* printf(" * fmt = %s\n", fmt); */
+        /* printf(" * buf = %s\n", buf); */
+        /* printf(" * ret = %d\n", ret); */
+
+        TEST_ASSERT(ret == (int)strlen(fmt),
+                    "ret(=%d) != strlen(%s)(=%zu)",
+                    ret, fmt, strlen(fmt));
+
+        TEST_ASSERT(buf[sizeof(buf) - 1] == '\0',
+                    "buf isn't NULL ended : %c",
+                    buf[sizeof(buf) - 1]);
+
+        TEST_ASSERT(strncmp(fmt, buf, sizeof(buf) - 1) == 0,
+                    "strncmp(%s, %s, %zu) != 0 !",
+                    buf, fmt, sizeof(buf) - 1);
+}
+
 int main(void)
 {
         TEST_MODULE_INIT("flc_str");
@@ -152,6 +177,8 @@ int main(void)
         TEST_RUN(test_sstrcat);
 
         TEST_RUN(test_sstrcat_null);
+
+        TEST_RUN(test_ssprintf_nullended);
 
         return TEST_MODULE_RETURN;
 }

@@ -23,6 +23,40 @@
  */
 size_t sstrcpy(char *dst, size_t dst_size, const char *src);
 
+/*
+ * svsprintf
+ *
+ * aka "secure vsprintf"
+ *
+ * it's a vnsprintf wrapper which certified the buffer (str) will
+ * be always NULL terminated.
+ *
+ * \brief Copy formated string with its arguments into buffer.
+ * \param dst Destination buffer where output will be copied
+ * \param dst_size Size of destination buffer
+ * \param fmt Formated string
+ * \param args va_list
+ * \return same return than vsnprintf
+ */
+int svsprintf(char *dst, size_t dst_size, const char *fmt, va_list args);
+
+/*
+ * ssprintf
+ *
+ * aka "secure sprintf"
+ *
+ * it's a snprintf wrapper which certified the buffer (str) will
+ * be always NULL terminated.
+ *
+ * \brief Copy formated string with its arguments into buffer.
+ * \param dst Destination buffer where output will be copied
+ * \param dst_size Size of destination buffer
+ * \param fmt Formated string
+ * \param ... The arguments
+ * \return same return than snprintf
+ */
+int ssprintf(char *dst, size_t dst_size, const char *fmt, ...);
+
 /* 
  * sstrcat
  *
