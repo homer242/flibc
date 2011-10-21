@@ -4,7 +4,7 @@
 
 #include "libtest.h"
 
-TEST_DEF(test_strxcpy)
+TEST_DEF(test_sstrcpy)
 {
         unsigned int i;
         char buf1[1];
@@ -22,7 +22,7 @@ TEST_DEF(test_strxcpy)
         {
                 /* 1 byte buffer */
                 m = min(sizeof(buf1) - 1, strlen(strs[i]));
-                ret = strxcpy(buf1, sizeof(buf1), strs[i]);
+                ret = sstrcpy(buf1, sizeof(buf1), strs[i]);
 
                 TEST_ASSERT(m == ret,
                             "Invalid copy (ret=%zu != %d)",
@@ -35,7 +35,7 @@ TEST_DEF(test_strxcpy)
 
                 /* 16 byte buffer */
                 m = min(sizeof(buf16) - 1, strlen(strs[i]));
-                ret = strxcpy(buf16, sizeof(buf16), strs[i]);
+                ret = sstrcpy(buf16, sizeof(buf16), strs[i]);
 
                 TEST_ASSERT(m == ret,
                             "Invalid copy (ret=%zu != %d)",
@@ -48,12 +48,12 @@ TEST_DEF(test_strxcpy)
         }
 }
 
-TEST_DEF(test_strxcpy_null)
+TEST_DEF(test_sstrcpy_null)
 {
         char buf[16] = "  d  ";
         size_t ret;
 
-        ret = strxcpy(buf, sizeof(buf), NULL);
+        ret = sstrcpy(buf, sizeof(buf), NULL);
 
         TEST_ASSERT(ret == 0,
                     "Invalid return %zu !",
@@ -64,7 +64,7 @@ TEST_DEF(test_strxcpy_null)
                     buf);
 }
 
-TEST_DEF(test_matches)
+TEST_DEF(test_strmatches)
 {
         char buf[16];
 
@@ -72,25 +72,25 @@ TEST_DEF(test_matches)
                  "teststring");
 
 #define STR1 "teststring"
-        TEST_ASSERT(matches(buf, STR1),
+        TEST_ASSERT(strmatches(buf, STR1),
                     "matches (%s, %s) failed",
                     buf, STR1);
 #undef STR1
 
 #define STR1 "test"
-        TEST_ASSERT(!matches(buf, STR1),
+        TEST_ASSERT(!strmatches(buf, STR1),
                     "matches (%s, %s) failed",
                     buf, STR1);
 #undef STR1
 
 #define STR1 ""
-        TEST_ASSERT(!matches(buf, STR1),
+        TEST_ASSERT(!strmatches(buf, STR1),
                     "matches (%s, %s) failed",
                     buf, STR1);
 #undef STR1
 }
 
-TEST_DEF(test_strxcat)
+TEST_DEF(test_sstrcat)
 {
         unsigned int i;
         char buf[12] = "";
@@ -109,7 +109,7 @@ TEST_DEF(test_strxcat)
         {
                 m = min(strlen(strs[i]),
                         sizeof(buf) - 1 - strlen(buf));
-                ret = strxcat(buf, sizeof(buf), strs[i]);
+                ret = sstrcat(buf, sizeof(buf), strs[i]);
 
                 TEST_ASSERT(ret == m,
                             "cat return invalid %zu != %d",
@@ -123,12 +123,12 @@ TEST_DEF(test_strxcat)
 #undef STR2
 }
 
-TEST_DEF(test_strxcat_null)
+TEST_DEF(test_sstrcat_null)
 {
         char buf[16] = "  d  ";
         size_t ret;
 
-        ret = strxcat(buf, sizeof(buf), NULL);
+        ret = sstrcat(buf, sizeof(buf), NULL);
 
         TEST_ASSERT(ret == 0,
                     "Invalid return %zu !",
@@ -143,15 +143,15 @@ int main(void)
 {
         TEST_MODULE_INIT("flc_str");
 
-        TEST_RUN(test_strxcpy);
+        TEST_RUN(test_sstrcpy);
 
-        TEST_RUN(test_strxcpy_null);
+        TEST_RUN(test_sstrcpy_null);
 
-        TEST_RUN(test_matches);
+        TEST_RUN(test_strmatches);
 
-        TEST_RUN(test_strxcat);
+        TEST_RUN(test_sstrcat);
 
-        TEST_RUN(test_strxcat_null);
+        TEST_RUN(test_sstrcat_null);
 
         return TEST_MODULE_RETURN;
 }

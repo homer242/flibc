@@ -5,6 +5,10 @@
 #include <stdarg.h>
 
 /* 
+ * sstrcpy
+ *
+ * aka "secure strcpy"
+ *
  * Copy src to string dst of size dst_size.  At most dst_size - 1 characters
  * will be copied.  Always NULL terminates (unless dst_size == 0).
  * if strlen(src) >= dst_size, truncation occurred.
@@ -17,9 +21,13 @@
  * \param src Source String
  * \return size count of char copied
  */
-size_t strxcpy(char *dst, size_t dst_size, const char *src);
+size_t sstrcpy(char *dst, size_t dst_size, const char *src);
 
 /* 
+ * sstrcat
+ *
+ * aka "secure strcat"
+ *
  * Appends src to string dst of size dst_size (unlike strncat, dst_size is the
  * full size of dst, not space left).  At most dst_size-1 characters
  * will be copied.  Always NULL terminates (unless dst_size <= strlen(dst)).
@@ -27,7 +35,7 @@ size_t strxcpy(char *dst, size_t dst_size, const char *src);
  *
  * if src == NULL, concat "" in dst buffer.
  *
- * dst buffer must be initialized with \0 at first indent
+ * dst buffer must be initialized with \0 before first call
  *
  * \brief Concat string into buffer string.
  * \param dst Destination buffer where source string will be concat
@@ -35,14 +43,14 @@ size_t strxcpy(char *dst, size_t dst_size, const char *src);
  * \param src Source String
  * \return size count of char copied
  */
-size_t strxcat(char *dst, size_t dst_size, const char *src);
+size_t sstrcat(char *dst, size_t dst_size, const char *src);
 
 /*
  * \brief Compare string to a constant string.
  * \param data Data string
  * \param cstr Constant string
  */
-#define matches(s, c_str)                                       \
+#define strmatches(s, c_str)                                    \
         ({                                                      \
                 const char __dummy[] = c_str;                   \
                 (void)(&__dummy);                               \
@@ -89,7 +97,7 @@ static inline const char * strtrim(char *str)
  * \param dfl default value if convertion failed
  * \return long integer
  */
-long strxtol(const char *str, long dfl);
+long strtol_dfl(const char *str, long dfl);
 
 /*
  * Convert a string to a long long integer
@@ -98,7 +106,7 @@ long strxtol(const char *str, long dfl);
  * \param dfl default value if convertion failed
  * \return long long integer
  */
-long long strxtoll(const char *str, long long dfl);
+long long strtoll_dfl(const char *str, long long dfl);
 
 #endif
 

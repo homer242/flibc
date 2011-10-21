@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-size_t strxcpy(char *dst, size_t dst_size, const char *src)
+size_t sstrcpy(char *dst, size_t dst_size, const char *src)
 {
         char *d = dst;
         const char *s = src;
@@ -38,7 +38,7 @@ size_t strxcpy(char *dst, size_t dst_size, const char *src)
         return (s - src - 1); /* count does not include NULL */
 }
 
-size_t strxcat(char *dst, size_t dst_size, const char *src)
+size_t sstrcat(char *dst, size_t dst_size, const char *src)
 {
         char *d = dst;
         const char *s = src;
@@ -121,7 +121,7 @@ char * strrtrim(char *str)
         return str;
 }
 
-long strxtol(const char *str, long dfl)
+long strtol_dfl(const char *str, long dfl)
 {
         long ret;
 
@@ -140,7 +140,7 @@ long strxtol(const char *str, long dfl)
         return ret;
 }
 
-long long strxtoll(const char *str, long long dfl)
+long long strtoll_dfl(const char *str, long long dfl)
 {
         long long ret;
 
@@ -158,4 +158,3 @@ long long strxtoll(const char *str, long long dfl)
 
         return ret;      
 }
-
