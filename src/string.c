@@ -88,7 +88,7 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src)
                 ++d;
         }
 
-        dlen = d - dst;
+        dlen = (size_t)(d - dst);
         n = dst_size - dlen;
 
         if(n == 0)
@@ -111,7 +111,7 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src)
                 ++s;
         }
 
-	return (s - src - 1); /* count does not include NULL */
+	return (size_t)(s - src - 1); /* count does not include NULL */
 }
 
 int strempty(const char *str)
