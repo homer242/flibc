@@ -93,13 +93,48 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src)
 	return (size_t)(s - src - 1); /* count does not include NULL */
 }
 
+int sstrcmp(const char *str1, const char *str2)
+{
+        if(str1 == NULL)
+        {
+                str1 = "";
+        }
+
+        if(str2 == NULL)
+        {
+                str2 = "";
+        }
+
+        return strcmp(str1, str2);
+}
+
+int sstrncmp(const char *str1, size_t maxsize, const char *str2)
+{
+        if(str1 == NULL)
+        {
+                str1 = "";
+        }
+
+        if(str2 == NULL)
+        {
+                str2 = "";
+        }
+
+        return strncmp(str1, str2, maxsize);
+}
+
 int strempty(const char *str)
 {
         return (str == NULL || str[0] == '\0');
 }
 
-const char * strltrim(const char *str)
+const char* strltrim(const char *str)
 {
+        if(str == NULL)
+        {
+                return NULL;
+        }
+
         while(*str != '\0')
         {
                 if(strchr(" \t\n\r", *str) == NULL)
@@ -113,9 +148,16 @@ const char * strltrim(const char *str)
         return str;
 }
 
-char * strrtrim(char *str)
+char* strrtrim(char *str)
 {
-        char *end = str + strlen(str);
+        char *end;
+
+        if(str == NULL)
+        {
+                return NULL;
+        }
+
+        end = str + strlen(str);
 
         while(end-- > str)
         {
