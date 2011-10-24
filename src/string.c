@@ -7,37 +7,16 @@
 
 size_t sstrcpy(char *dst, size_t dst_size, const char *src)
 {
-        char *d = dst;
-        const char *s = src;
-        size_t n = dst_size;
-
         /* avoid segfault if src is NULL */
         if(src == NULL)
         {
                 src = "";
-                s = src;
         }
 
-        /* Copy as many bytes as will fit */
-        if(n != 0)
-        {
-                while(--n != 0)
-                {
-                        if((*d++ = *s++) == '\0')
-                        {
-                                break;
-                        }
-                }
-        }
+        strncpy(dst, src, dst_size);
+        dst[dst_size - 1] = '\0';
 
-        /* Not enough room in dst, add NULL */
-        if(n == 0 && dst_size != 0)
-        {
-                *d = '\0'; /* NULL-terminate dst */
-                ++s;
-        }
-
-        return (size_t)(s - src - 1); /* count does not include NULL */
+        return strlen(dst);
 }
 
 int svsprintf(char *dst, size_t size, const char *fmt, va_list args)
@@ -88,7 +67,7 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src)
                 ++d;
         }
 
-        dlen = d - dst;
+        dlen = (size_t)(d - dst);
         n = dst_size - dlen;
 
         if(n == 0)
@@ -111,7 +90,7 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src)
                 ++s;
         }
 
-	return (s - src - 1); /* count does not include NULL */
+	return (size_t)(s - src - 1); /* count does not include NULL */
 }
 
 int strempty(const char *str)
@@ -151,7 +130,7 @@ char * strrtrim(char *str)
         return str;
 }
 
-long strtol_dfl(const char *str, long dfl)
+long sstrtol(const char *str, long dfl)
 {
         long ret;
 
@@ -170,7 +149,7 @@ long strtol_dfl(const char *str, long dfl)
         return ret;
 }
 
-long long strtoll_dfl(const char *str, long long dfl)
+long long sstrtoll(const char *str, long long dfl)
 {
         long long ret;
 

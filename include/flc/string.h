@@ -5,15 +5,11 @@
 #include <stdarg.h>
 
 /* 
- * sstrcpy
+ * sstrcpy (aka "safe strcpy") - wrapper function to strncpy
  *
- * aka "secure strcpy"
- *
- * Copy src to string dst of size dst_size.  At most dst_size - 1 characters
- * will be copied.  Always NULL terminates (unless dst_size == 0).
- * if strlen(src) >= dst_size, truncation occurred.
- *
- * if src == NULL, copy "" in dst buffer.
+ *  - always NULL terminated the destination buffer
+ *  - if src == NULL, copy "" in destination buffer.
+ *  - unlike strncpy(), return count of char copied
  *
  * \brief Copy string into buffer.
  * \param dst Destination buffer where source string will be copied
@@ -26,7 +22,7 @@ size_t sstrcpy(char *dst, size_t dst_size, const char *src);
 /*
  * svsprintf
  *
- * aka "secure vsprintf"
+ * aka "safe vsprintf"
  *
  * it's a vnsprintf wrapper which certified the buffer (str) will
  * be always NULL terminated.
@@ -43,7 +39,7 @@ int svsprintf(char *dst, size_t dst_size, const char *fmt, va_list args);
 /*
  * ssprintf
  *
- * aka "secure sprintf"
+ * aka "safe sprintf"
  *
  * it's a snprintf wrapper which certified the buffer (str) will
  * be always NULL terminated.
@@ -60,7 +56,7 @@ int ssprintf(char *dst, size_t dst_size, const char *fmt, ...);
 /* 
  * sstrcat
  *
- * aka "secure strcat"
+ * aka "safe strcat"
  *
  * Appends src to string dst of size dst_size (unlike strncat, dst_size is the
  * full size of dst, not space left).  At most dst_size-1 characters
@@ -131,7 +127,7 @@ static inline const char * strtrim(char *str)
  * \param dfl default value if convertion failed
  * \return long integer
  */
-long strtol_dfl(const char *str, long dfl);
+long sstrtol(const char *str, long dfl);
 
 /*
  * Convert a string to a long long integer
@@ -140,7 +136,7 @@ long strtol_dfl(const char *str, long dfl);
  * \param dfl default value if convertion failed
  * \return long long integer
  */
-long long strtoll_dfl(const char *str, long long dfl);
+long long sstrtoll(const char *str, long long dfl);
 
 #endif
 
