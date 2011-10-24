@@ -1,5 +1,5 @@
-The Forty-second Library for C (FLC)
--------------------------------------
+The Forty second Library for C (FLibC)
+--------------------------------------
 Anthony viallard <avd@patatrac.info>
 
 Main goals of this library:
@@ -8,3 +8,16 @@ Main goals of this library:
  - produce secure code (https://www.securecoding.cert.org/confluence/display/seccode/CERT+C+Secure+Coding+Standard).
 
 If you want to participate, come on http://github.com/homer242/flc or send my an email.
+
+Compilation from scratch
+-------------------------------------
+
+ $ ./autogen.sh
+ $ ./configure
+ $ make install
+
+Execute unit test
+-------------------------------------
+
+ $ make check
+
