@@ -67,27 +67,25 @@ TEST_DEF(test_sstrcpy_null)
 TEST_DEF(test_strmatches)
 {
         char buf[16];
+        char *null_str = NULL;
+
+        TEST_ASSERT(!strmatches(null_str, "teststring"),
+                    "matches (NULL, string) return true");
 
         snprintf(buf, sizeof(buf),
                  "teststring");
 
-#define STR1 "teststring"
-        TEST_ASSERT(strmatches(buf, STR1),
-                    "matches (%s, %s) failed",
-                    buf, STR1);
-#undef STR1
+        TEST_ASSERT(strmatches(buf, "teststring"),
+                    "matches (%s, %s) return false",
+                    buf, "teststring");
 
-#define STR1 "test"
-        TEST_ASSERT(!strmatches(buf, STR1),
-                    "matches (%s, %s) failed",
-                    buf, STR1);
-#undef STR1
+        TEST_ASSERT(!strmatches(buf, "test"),
+                    "matches (%s, %s) return true",
+                    buf, "test");
 
-#define STR1 ""
-        TEST_ASSERT(!strmatches(buf, STR1),
-                    "matches (%s, %s) failed",
-                    buf, STR1);
-#undef STR1
+        TEST_ASSERT(!strmatches(buf, ""),
+                    "matches (%s, %s) return true",
+                    buf, "");
 }
 
 TEST_DEF(test_sstrcat)
