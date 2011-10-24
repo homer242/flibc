@@ -2,7 +2,7 @@ INCLUDES = -I$(top_srcdir)/include
 
 LIBRARY_VERSION = 1:0:0
 
-lib_LTLIBRARIES = libflc.la
+lib_LTLIBRARIES = libflibc.la
 
-libflc_la_SOURCES = string.c
-libflc_la_LDFLAGS = -version-info $(LIBRARY_VERSION)
+libflibc_la_SOURCES = string.c
+libflibc_la_LDFLAGS = -version-info $(LIBRARY_VERSION)

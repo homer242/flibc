@@ -1,4 +1,4 @@
-#include "flc/string.h"
+#include "flibc/string.h"
 
 #include <errno.h>
 #include <stdlib.h>

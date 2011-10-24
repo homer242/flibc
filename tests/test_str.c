@@ -1,6 +1,6 @@
-#include <flc/string.h>
-#include <flc/flc.h>
-#include <flc/math.h>
+#include <flibc/string.h>
+#include <flibc/flibc.h>
+#include <flibc/math.h>
 
 #include "libtest.h"
 

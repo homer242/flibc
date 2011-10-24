@@ -3,9 +3,9 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: Flc
-Description: Flc library.
+Name: flibc
+Description: the Forty second Library for C (flibc)
 Requires:
 Version: @PACKAGE_VERSION@
-Libs: -L${libdir} -lflc
-Cflags: -I${includedir}/flc
+Libs: -L${libdir} -lflibc
+Cflags: -I${includedir}/flibc
