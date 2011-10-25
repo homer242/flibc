@@ -7,10 +7,12 @@
 
 size_t sstrcpy(char *dst, size_t dst_size, const char *src)
 {
+        size_t src_len = strlen(src);
+
         strncpy(dst, src, dst_size);
         dst[dst_size - 1] = '\0';
 
-        return strlen(dst);
+        return (src_len >= dst_size ? src_len : strlen(dst));
 }
 
 int svsprintf(char *dst, size_t size, const char *fmt, va_list args)

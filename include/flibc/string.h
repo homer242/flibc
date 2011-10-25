@@ -10,12 +10,14 @@
  *  Copy string into buffer.
  *
  *  - unlike strncpy(), destination buffer is always null terminated;
- *  - unlike strncpy(), return count of char copied.
+ *  - unlike strncpy(), return count of char copied (or should have 
+ *    been copied). If return > dst_size - 1, truncation occured.
  *
  * \param dst Destination buffer where source string will be copied
  * \param dst_size Size of destination buffer
  * \param src Source String
- * \return count of char copied
+ * \return count of char copied (or should have been copied in case
+ *                               of truncation)
  */
 size_t sstrcpy(char *dst, size_t dst_size, const char *src);
 
@@ -55,13 +57,16 @@ int ssprintf(char *dst, size_t dst_size, const char *fmt, ...);
  *  Concat string into buffer.
  *
  * - destination buffer is always null terminated;
- * - unlike strncat, dst_size is the full size of dst, not space left;
- * - at most dst_size-1 characters.
+ * - unlike strncat, dst_size is the full size of dst, not space left !;
+ * - copy at most dst_size - 1 characters;
+ * - if return > dst_size - 1, truncation occurred.
  *
  * \param dst Destination buffer where source string will be concat
  * \param dst_size Size of destination buffer (Total size not remaining)
  * \param src Source String
- * \return count of char copied
+ * \return total count of char in destination buffer (or should have been 
+ *                                                    in buffer in case of
+ *                                                    truncation)
  */
 size_t sstrcat(char *dst, size_t dst_size, const char *src);
 
