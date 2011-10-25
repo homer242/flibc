@@ -7,12 +7,6 @@
 
 size_t sstrcpy(char *dst, size_t dst_size, const char *src)
 {
-        /* avoid segfault if src is NULL */
-        if(src == NULL)
-        {
-                src = "";
-        }
-
         strncpy(dst, src, dst_size);
         dst[dst_size - 1] = '\0';
 
@@ -22,8 +16,6 @@ size_t sstrcpy(char *dst, size_t dst_size, const char *src)
 int svsprintf(char *dst, size_t size, const char *fmt, va_list args)
 {
         int ret;
-
-        dst[size - 1] = '\0';
 
 	ret = vsnprintf(dst, size, fmt, args);
 	if(ret > (int)size - 1)
@@ -53,13 +45,6 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src)
         const char *s = src;
         size_t n = dst_size;
         size_t dlen;
-
-        /* avoid segfault if src is NULL */
-        if(src == NULL)
-        {
-                src = "";
-                s = src;
-        }
 
         /* Find the end of dst and adjust bytes left but don't go past end */
         while(n-- != 0 && *d != '\0')
@@ -93,48 +78,13 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src)
 	return (size_t)(s - src - 1); /* count does not include NULL */
 }
 
-int sstrcmp(const char *str1, const char *str2)
-{
-        if(str1 == NULL)
-        {
-                str1 = "";
-        }
-
-        if(str2 == NULL)
-        {
-                str2 = "";
-        }
-
-        return strcmp(str1, str2);
-}
-
-int sstrncmp(const char *str1, size_t maxsize, const char *str2)
-{
-        if(str1 == NULL)
-        {
-                str1 = "";
-        }
-
-        if(str2 == NULL)
-        {
-                str2 = "";
-        }
-
-        return strncmp(str1, str2, maxsize);
-}
-
 int strempty(const char *str)
 {
-        return (str == NULL || str[0] == '\0');
+        return (str[0] == '\0');
 }
 
 const char* strltrim(const char *str)
 {
-        if(str == NULL)
-        {
-                return NULL;
-        }
-
         while(*str != '\0')
         {
                 if(strchr(" \t\n\r", *str) == NULL)
@@ -150,14 +100,7 @@ const char* strltrim(const char *str)
 
 char* strrtrim(char *str)
 {
-        char *end;
-
-        if(str == NULL)
-        {
-                return NULL;
-        }
-
-        end = str + strlen(str);
+        char *end = str + strlen(str);
 
         while(end-- > str)
         {
@@ -172,17 +115,17 @@ char* strrtrim(char *str)
         return str;
 }
 
-long sstrtol(const char *str, long dfl)
+long sstrtol(const char *str, long dfl, int base)
 {
         long ret;
 
-        if(str == NULL || *str == '\0')
+        if(*str == '\0')
         {
                 return dfl;
         }
 
         errno = 0;
-        ret = strtol(str, NULL, 10);
+        ret = strtol(str, NULL, base);
         if (errno != 0)
         {
                 return dfl;
@@ -191,17 +134,17 @@ long sstrtol(const char *str, long dfl)
         return ret;
 }
 
-long long sstrtoll(const char *str, long long dfl)
+long long sstrtoll(const char *str, long long dfl, int base)
 {
         long long ret;
 
-        if(str == NULL || *str == '\0')
+        if(*str == '\0')
         {
                 return dfl;
         }
 
         errno = 0;
-        ret = strtoll(str, NULL, 10);
+        ret = strtoll(str, NULL, base);
         if (errno != 0)
         {
                 return dfl;

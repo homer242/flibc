@@ -48,22 +48,6 @@ TEST_DEF(test_sstrcpy)
         }
 }
 
-TEST_DEF(test_sstrcpy_null)
-{
-        char buf[16] = "  d  ";
-        size_t ret;
-
-        ret = sstrcpy(buf, sizeof(buf), NULL);
-
-        TEST_ASSERT(ret == 0,
-                    "Invalid return %zu !",
-                    ret);
-
-        TEST_ASSERT(strcmp(buf, "") == 0,
-                    "Invalid copy (%s) !",
-                    buf);
-}
-
 TEST_DEF(test_strmatches)
 {
         char buf[16];
@@ -121,22 +105,6 @@ TEST_DEF(test_sstrcat)
 #undef STR2
 }
 
-TEST_DEF(test_sstrcat_null)
-{
-        char buf[16] = "  d  ";
-        size_t ret;
-
-        ret = sstrcat(buf, sizeof(buf), NULL);
-
-        TEST_ASSERT(ret == 0,
-                    "Invalid return %zu !",
-                    ret);
-
-        TEST_ASSERT(strcmp(buf, "  d  ") == 0,
-                    "Invalid copy (%s) !",
-                    buf);
-}
-
 TEST_DEF(test_ssprintf_nullended)
 {
         int ret;
@@ -162,21 +130,29 @@ TEST_DEF(test_ssprintf_nullended)
                     buf, fmt, sizeof(buf) - 1);
 }
 
+TEST_DEF(test_strempty)
+{
+        TEST_ASSERT(strempty(""), "Empty string seems to be not empty ?!?");
+
+        TEST_ASSERT(!strempty("a"), "strempty(a) return true instead of false");
+
+        TEST_ASSERT(!strempty("Hello World !"),
+                    "strempty(Hello World !) return true instead of false");
+}
+
 int main(void)
 {
         TEST_MODULE_INIT("flc_str");
 
         TEST_RUN(test_sstrcpy);
 
-        TEST_RUN(test_sstrcpy_null);
-
         TEST_RUN(test_strmatches);
 
         TEST_RUN(test_sstrcat);
 
-        TEST_RUN(test_sstrcat_null);
-
         TEST_RUN(test_ssprintf_nullended);
+
+        TEST_RUN(test_strempty);
 
         return TEST_MODULE_RETURN;
 }
