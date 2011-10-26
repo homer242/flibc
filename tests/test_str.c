@@ -38,7 +38,7 @@ TEST_DEF(test_sstrcpy)
                     "condition strcmp(%s, %s) == 0 failed",
                     buf16, my_string);
 
-        /* test return string copied is truncated */
+        /* test return string copied is truncated and NULL terminated */
         my_string = "foobarfoobarfoobarfoo";
 
         ret = sstrcpy(buf16, sizeof(buf16), my_string);
@@ -50,31 +50,37 @@ TEST_DEF(test_sstrcpy)
         TEST_ASSERT(ret == strlen(my_string),
                     "ret=%zu != strlen(%s)=%zu",
                     ret, my_string, strlen(my_string));
+
+        TEST_ASSERT(buf16[sizeof(buf16) - 1] == '\0',
+                    "condition buf16[sizeof(buf16) - 1] == '\\0' failed");
+
+        TEST_ASSERT(strncmp(my_string, buf16, sizeof(buf16) - 1) == 0,
+                    "condition strncmp(my_string=%s, buf16=%s, sizeof(buf16) - 1) == 0 failed",
+                    my_string, buf16);
 }
 
-TEST_DEF(test_sstrcpy_nullended)
+TEST_DEF(test_ssprintf)
 {
-        size_t ret;
-        char buf[16];
-        char fmt[17] = "0123456789123456";
+        char buf16[16];
+        int ret;
 
-        ret = sstrcpy(buf, sizeof(buf), fmt);
+        const char *my_string = NULL;
 
-        TEST_ASSERT(ret > sizeof(buf) - 1,
-                    "condition ret=%zu > sizeof(buf)=%zu  - 1",
-                    ret, sizeof(buf));
+        /* test truncation case and null terminated */
+        my_string = "0123456789012345";
 
-        TEST_ASSERT(ret == strlen(fmt),
-                    "ret(=%zu) != strlen(%s)(=%zu)",
-                    ret, fmt, strlen(fmt));
+        ret = ssprintf(buf16, sizeof(buf16), "%s", my_string);
 
-        TEST_ASSERT(buf[sizeof(buf) - 1] == '\0',
-                    "buf isn't NULL ended : %c",
-                    buf[sizeof(buf) - 1]);
+        TEST_ASSERT(ret > (int)sizeof(buf16) - 1,
+                    "condition (ret=%d > sizeof(buf16) - 1) failed",
+                    ret);
 
-        TEST_ASSERT(strncmp(fmt, buf, sizeof(buf) - 1) == 0,
-                    "strncmp(%s, %s, %zu) != 0 !",
-                    buf, fmt, sizeof(buf) - 1);
+        TEST_ASSERT(ret == (int)strlen(my_string),
+                    "condition (ret=%d == strlen(%s)=%zu) failed",
+                    ret, my_string, strlen(my_string));
+
+        TEST_ASSERT(buf16[sizeof(buf16) - 1] == '\0',
+                    "condition (buf16[sizeof(buf16) - 1] == '\\0') failed");
 }
 
 TEST_DEF(test_strmatches)
@@ -174,7 +180,8 @@ int main(void)
         TEST_MODULE_INIT("flc_str");
 
         TEST_RUN(test_sstrcpy);
-        TEST_RUN(test_sstrcpy_nullended);
+
+        TEST_RUN(test_ssprintf);
 
         TEST_RUN(test_strmatches);
 

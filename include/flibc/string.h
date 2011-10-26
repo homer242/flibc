@@ -11,7 +11,8 @@
  *
  *  - unlike strncpy(), destination buffer is always null terminated;
  *  - unlike strncpy(), return count of char copied (or should have 
- *    been copied). If return > dst_size - 1, truncation occured.
+ *    been copied if truncation occured);
+ *  - if return > dst_size - 1, truncation occured.
  *
  * \param dst Destination buffer where source string will be copied
  * \param dst_size Size of destination buffer
@@ -26,7 +27,8 @@ size_t sstrcpy(char *dst, size_t dst_size, const char *src);
  *
  *  Copy formatted output conversion into buffer.
  *
- *  - unlike vsnprintf(), destination buffer is always null terminated.
+ *  - unlike vsnprintf(), destination buffer is always null terminated;
+ *  - if return > dst_size - 1, truncation occured.
  *
  * \param dst Destination buffer where output will be copied
  * \param dst_size Size of destination buffer
@@ -41,7 +43,8 @@ int svsprintf(char *dst, size_t dst_size, const char *fmt, va_list args);
  *
  *  Copy formatted output conversion into buffer.
  *
- *  - unlike snprintf(), destination buffer is always null terminated.
+ *  - unlike snprintf(), destination buffer is always null terminated;
+ *  - if return > dst_size - 1, truncation occured.
  *
  * \param dst Destination buffer where output will be copied
  * \param dst_size Size of destination buffer
