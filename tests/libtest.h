@@ -1,6 +1,7 @@
 #ifndef _LIBTEST_H_
 #define _LIBTEST_H_
 
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -22,7 +23,7 @@
 /*
  * Test return struct
  */
-struct test_result_t {
+struct test_result {
         int ret;
 	int line;
 	char msg[256];
@@ -42,7 +43,7 @@ struct test_result_t {
  */
 #define TEST_RUN(func) do                                               \
 	{								\
-		struct test_result_t tr;                                \
+		struct test_result tr;                                  \
 		tr.ret = TEST_RETURN_SUCCESS;                           \
 									\
 		func(&tr);                                              \
@@ -69,12 +70,12 @@ struct test_result_t {
  *  TEST_RETURN_SUCCESS if test is success
  */
 #define TEST_DEF(name)                                  \
-	static void name(struct test_result_t* __tr)
+	static void name(struct test_result* __tr)
 
 /*
- * Produce a assertion
+ * Produce assertions
  */
-#define TEST_ASSERT(test, message, ...) do			\
+#define TEST_RAW_ASSERT(test, message, ...) do                  \
 	{							\
 		if(!(test))					\
 		{						\
@@ -86,6 +87,9 @@ struct test_result_t {
 			return;                                 \
 		}						\
 	} while(0)
+
+#define TEST_ASSERT(condition)                                  \
+        TEST_RAW_ASSERT(condition, "Condition isn't TRUE")
 
 /*
  * Define a test module of unit tests
