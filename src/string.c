@@ -61,6 +61,39 @@ int strempty(const char *str)
         return (str[0] == '\0');
 }
 
+unsigned int strsplit(const char *str, const char *sep, struct list_head *list)
+{
+	const char *str_p = str;
+	char *sep_in_str = NULL;
+	size_t len_sep = strlen(sep);
+        struct str_list_item *item = NULL;
+        unsigned int i = 0;
+
+        INIT_LIST_HEAD(list);
+
+	str_p = str;
+	while((sep_in_str = strstr(str_p, sep)) != NULL)
+	{
+		item = calloc(sizeof(*item), 1);
+                item->value = strndup(str_p, (size_t)(sep_in_str - str_p));
+                list_add_tail(&(item->node), list);
+                ++i;
+
+		str_p = sep_in_str + len_sep;
+	}
+
+        if(*str_p != '\0')
+        {
+                /* copy end of string */
+                item = calloc(sizeof(*item), 1);
+                item->value = strdup(str_p);
+                list_add_tail(&(item->node), list);
+                ++i;
+        }
+
+	return i;
+}
+
 const char* strltrim(const char *str)
 {
         while(*str != '\0')

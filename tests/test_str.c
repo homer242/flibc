@@ -1,6 +1,7 @@
 #include <flibc/string.h>
 #include <flibc/flibc.h>
 #include <flibc/math.h>
+#include <flibc/list.h>
 
 #include "libtest.h"
 
@@ -117,6 +118,88 @@ TEST_DEF(test_strempty)
         TEST_ASSERT(!strempty("Hello World !"));
 }
 
+TEST_DEF(test_strsplit)
+{
+        struct list_head list;
+        unsigned int count,
+                i;
+        const char *my_string = NULL;
+        struct str_list_item *item = NULL;
+
+        /* basic test */
+        const char *items_expect[] = {
+                "one",
+                "two",
+                "three",
+                "four",
+                "five",
+        };
+
+        my_string = "one two three four five";
+
+        count = strsplit(my_string, " ", &list);
+
+        TEST_ASSERT(count == 5);
+        i = 0;
+        list_for_each_entry(item, &list, node)
+        {
+                TEST_ASSERT(strcmp(items_expect[i], item->value) == 0);
+                /* printf(" * item = %s\n", item->value); */
+                ++i;
+        }
+        TEST_ASSERT(count == i);
+        str_list_free(&list);
+
+        /* no found delimiter in string */
+        const char *items_expect2[] = {
+                "therearenospacehere",
+        };
+
+        my_string = "therearenospacehere";
+
+        count = strsplit(my_string, " ", &list);
+        TEST_ASSERT(count == 1);
+        i = 0;
+        list_for_each_entry(item, &list, node)
+        {
+                TEST_ASSERT(strcmp(items_expect2[i], item->value) == 0);
+                /* printf(" * item = %s\n", item->value); */
+                ++i;
+        }
+        TEST_ASSERT(count == i);
+        str_list_free(&list);
+
+        /* garbage in string */
+        const char *items_expect3[] = {
+                "",
+                "one",
+                "",
+                "two",
+                "", "",
+                "three",
+                "","","",
+                "four",
+                "","","","",
+                "five",
+                "","","","","",
+        };
+
+        my_string = " one  two   three    four     five      ";
+
+        count = strsplit(my_string, " ", &list);
+        TEST_ASSERT(count == 5 + (1 + 1 + 2 + 3 + 4 + 5));
+        i = 0;
+        list_for_each_entry(item, &list, node)
+        {
+                TEST_ASSERT(strcmp(items_expect3[i], item->value) == 0);
+                /* printf(" * item = %s, strlen()=%zu\n", */
+                /*        item->value, strlen(item->value)); */
+                ++i;
+        }
+        TEST_ASSERT(count == i);
+        str_list_free(&list);
+}
+
 int main(void)
 {
         TEST_MODULE_INIT("flibc/string");
@@ -126,6 +209,8 @@ int main(void)
         TEST_RUN(test_sstrcat);
         TEST_RUN(test_strmatches);
         TEST_RUN(test_strempty);
+
+        TEST_RUN(test_strsplit);
 
         return TEST_MODULE_RETURN;
 }

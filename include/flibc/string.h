@@ -1,8 +1,37 @@
 #ifndef _FLC_STRING_H_
 #define _FLC_STRING_H_
 
+#include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+
+#include "flibc/list.h"
+
+/*
+ * structs and functions to deal with list of string
+ */
+struct str_list_item {
+        char *value;
+        struct list_head node;
+};
+
+static inline void str_list_init(struct list_head *list)
+{
+        INIT_LIST_HEAD(list);
+}
+
+static inline void str_list_free(struct list_head *list)
+{
+        struct str_list_item *item1 = NULL,
+                *item2 = NULL;
+
+        list_for_each_entry_safe(item1, item2, list, node)
+        {
+                free(item1->value);
+                free(item1);
+                list_del(&(item1->node));
+        }
+}
 
 /* 
  * sstrcpy (aka "safe strcpy") - wrapper function to strncpy
@@ -101,6 +130,30 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src);
  * \return 0 if string isn't empty, different from 0 if empty
  */
 int strempty(const char *str);
+
+/*
+ * strsplit
+ *
+ *  Split string into a list of words, using sep as the word delimiter
+ *
+ * - Think to free list (with str_list_free()) after you finish with it;
+ *
+ * Example:
+ *
+ *      count = strsplit("Hello World!", " ", &list);
+ *      list_for_each_entry(item, &list, node)
+ *      {
+ *             // you stuff //
+ *      }
+ *      str_list_free(&list);
+ *
+ * \param str Data string
+ * \param sep The word delimiter
+ * \param list Pointer to an empty list where strsplit put
+ *             struct str_list_item items.
+ * \return count of words found and stored in list
+ */
+unsigned int strsplit(const char *str, const char *sep, struct list_head *list);
 
 /*
  * strltrim
