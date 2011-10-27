@@ -200,6 +200,74 @@ TEST_DEF(test_strsplit)
         str_list_free(&list);
 }
 
+TEST_DEF(test_strltrim)
+{
+        const char *my_string = NULL,
+                *ret = NULL;
+
+        /* basic test */
+        my_string = " \t  \n  \r   Hello\n\r\n\t ";
+
+        ret = strltrim(my_string);
+
+        TEST_ASSERT(strcmp(ret, "Hello\n\r\n\t ") == 0);
+
+        /* empty string */
+        my_string = "";
+
+        ret = strltrim(my_string);
+
+        TEST_ASSERT(strcmp(ret, "") == 0);
+}
+
+TEST_DEF(test_strrtrim)
+{
+        char *my_string = NULL,
+                *ret = NULL;
+
+        /* basic test */
+        my_string = strdup(" \t  \n  \r   Hello\n\r\n\t ");
+
+        ret = strrtrim(my_string);
+
+        TEST_ASSERT(strcmp(ret, " \t  \n  \r   Hello") == 0);
+
+        free(my_string);
+
+        /* empty string */
+        my_string = strdup("");
+
+        ret = strrtrim(my_string);
+
+        TEST_ASSERT(strcmp(ret, "") == 0);
+
+        free(my_string);
+}
+
+TEST_DEF(test_strtrim)
+{
+        char *my_string = NULL;
+        const char *ret = NULL;
+
+        /* basic test */
+        my_string = strdup(" \t  \n  \r   Hello\n\r\n\t ");
+
+        ret = strtrim(my_string);
+
+        TEST_ASSERT(strcmp(ret, "Hello") == 0);
+
+        free(my_string);
+
+        /* empty string */
+        my_string = strdup("");
+
+        ret = strtrim(my_string);
+
+        TEST_ASSERT(strcmp(ret, "") == 0);
+
+        free(my_string);
+}
+
 int main(void)
 {
         TEST_MODULE_INIT("flibc/string");
@@ -211,6 +279,9 @@ int main(void)
         TEST_RUN(test_strempty);
 
         TEST_RUN(test_strsplit);
+        TEST_RUN(test_strltrim);
+        TEST_RUN(test_strrtrim);
+        TEST_RUN(test_strtrim);
 
         return TEST_MODULE_RETURN;
 }
