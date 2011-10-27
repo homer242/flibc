@@ -43,41 +43,17 @@ int ssprintf(char *dst, size_t size, const char *fmt, ...)
 
 size_t sstrcat(char *dst, size_t dst_size, const char *src)
 {
-        char *d = dst;
-        const char *s = src;
-        size_t n = dst_size;
-        size_t dlen;
+        size_t dst_len = strlen(dst);
+        size_t dst_remain_size;
+        char *dst_p = NULL;
+        size_t ret;
 
-        /* Find the end of dst and adjust bytes left but don't go past end */
-        while(n-- != 0 && *d != '\0')
-        {
-                ++d;
-        }
+        dst_p = dst + dst_len;
+        dst_remain_size = dst_size - dst_len;
 
-        dlen = (size_t)(d - dst);
-        n = dst_size - dlen;
+        ret = sstrcpy(dst_p, dst_remain_size, src);
 
-        if(n == 0)
-        {
-                return 0;
-        }
-
-        while(--n != 0)
-        {
-                if((*d++ = *s++) == '\0')
-                {
-                        break;
-                }
-        }
-
-        /* Not enough room in dst, add NULL */
-        if(n == 0)
-        {
-                *d = '\0'; /* NULL-terminate dst */
-                ++s;
-        }
-
-	return (size_t)(s - src - 1); /* count does not include NULL */
+        return ret + dst_len;
 }
 
 int strempty(const char *str)
