@@ -59,6 +59,8 @@ int ssprintf(char *dst, size_t dst_size, const char *fmt, ...);
  *
  *  Concat string into buffer.
  *
+ * - Be carefull, dst string buffer must be initiliazed before first call
+ *   (with dst[0] = '\0' for example);
  * - destination buffer is always null terminated;
  * - unlike strncat, dst_size is the full size of dst, not space left !;
  * - copy at most dst_size - 1 characters;
