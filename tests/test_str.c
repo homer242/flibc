@@ -268,6 +268,46 @@ TEST_DEF(test_strtrim)
         free(my_string);
 }
 
+TEST_DEF(test_sstrtol)
+{
+        const char *my_string = NULL;
+        long ret;
+
+        /* basic test */
+        my_string = "13";
+
+        ret = sstrtol(my_string, 0, 10);
+
+        TEST_ASSERT(ret == 13);
+
+        /* empty string */
+        my_string = "";
+
+        ret = sstrtol(my_string, 0, 10);
+
+        TEST_ASSERT(ret == 0);
+}
+
+TEST_DEF(test_sstrtoll)
+{
+        const char *my_string = NULL;
+        long long ret;
+
+        /* basic test */
+        my_string = "13";
+
+        ret = sstrtoll(my_string, 0, 10);
+
+        TEST_ASSERT(ret == 13);
+
+        /* empty string */
+        my_string = "";
+
+        ret = sstrtoll(my_string, 0, 10);
+
+        TEST_ASSERT(ret == 0);
+}
+
 int main(void)
 {
         TEST_MODULE_INIT("flibc/string");
@@ -282,6 +322,9 @@ int main(void)
         TEST_RUN(test_strltrim);
         TEST_RUN(test_strrtrim);
         TEST_RUN(test_strtrim);
+
+        TEST_RUN(test_sstrtol);
+        TEST_RUN(test_sstrtoll);
 
         return TEST_MODULE_RETURN;
 }
