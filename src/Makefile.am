@@ -4,5 +4,5 @@ LIBRARY_VERSION = 1:0:0
 
 lib_LTLIBRARIES = libflibc.la
 
-libflibc_la_SOURCES = string.c
+libflibc_la_SOURCES = string.c log.c
 libflibc_la_LDFLAGS = -version-info $(LIBRARY_VERSION)

@@ -7,8 +7,8 @@
  * 
  */
 
-#ifndef _FLC_LIST_H_
-#define _FLC_LIST_H_
+#ifndef _FLIBC_LIST_H_
+#define _FLIBC_LIST_H_
 
 #include <stddef.h>
 

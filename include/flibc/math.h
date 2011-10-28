@@ -1,5 +1,5 @@
-#ifndef _FLC_MATH_H_
-#define _FLC_MATH_H_
+#ifndef _FLIBC_MATH_H_
+#define _FLIBC_MATH_H_
 
 /*! \def min(x, y)
  */

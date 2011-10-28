@@ -1,7 +1,7 @@
-#ifndef _FLC_DICT_H_
-#define _FLC_DICT_H_
+#ifndef _FLIBC_DICT_H_
+#define _FLIBC_DICT_H_
 
-#include "flc/list.h"
+#include "flibc/list.h"
 
 /*
  * An user friendly dictionnary based on list_head
