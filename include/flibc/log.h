@@ -1,6 +1,13 @@
 #ifndef _FLIBC_LOG_H_
 #define _FLIBC_LOG_H_
 
+/*
+ * log module
+ * -----------------------
+ *
+ * - You can enable log_debug() by defining ENABLE_LOG_DEBUG macro
+ */
+
 #include <syslog.h>
 
 #include "flibc/vt102.h"
