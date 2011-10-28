@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 
 size_t sstrcpy(char *dst, size_t dst_size, const char *src)
 {
