@@ -11,6 +11,7 @@ pkginclude_HEADERS = $(flc_includedir)/dict.h \
 		     $(flc_includedir)/list.h \
 		     $(flc_includedir)/math.h \
 		     $(flc_includedir)/log.h \
+		     $(flc_includedir)/vt102.h \
 		     $(flc_includedir)/string.h
 
 SUBDIRS = src tests
