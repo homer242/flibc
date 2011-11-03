@@ -21,7 +21,11 @@ int svsprintf(char *dst, size_t size, const char *fmt, va_list args)
         int ret;
 
 	ret = vsnprintf(dst, size, fmt, args);
-	if(ret > (int)size - 1)
+	if(ret < 0)
+        {
+                dst[0] = '\0';
+        }
+        else if(ret > (int)size - 1)
 	{
 		/* buffer has been truncated */
 		dst[size - 1] = '\0';
