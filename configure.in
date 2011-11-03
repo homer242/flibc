@@ -1,4 +1,4 @@
-AC_INIT([flibc], [0.1], [avd@patatrac.info])
+AC_INIT([flibc], [0.1.1], [avd@patatrac.info])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign])
 
