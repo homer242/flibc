@@ -16,10 +16,10 @@
 	log_write(LOG_INFO, fmt, ##__VA_ARGS__)
 
 #define log_notice(fmt, ...)                                        \
-        log_write(LOG_NOTICE, COLOR_PURPLE(fmt), ##__VA_ARGS__)
+        log_write(LOG_NOTICE, VT102_COLOR_PURPLE(fmt), ##__VA_ARGS__)
         
 #define log_error(fmt, ...)                                         \
-        log_write(LOG_ERR, COLOR_RED(fmt), ##__VA_ARGS__)
+        log_write(LOG_ERR, VT102_COLOR_RED(fmt), ##__VA_ARGS__)
 
 #if defined(ENABLE_LOG_DEBUG)
 #define log_debug(fmt, ...)                                         \
