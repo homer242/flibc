@@ -1,11 +1,11 @@
-#include <flibc/string.h>
+#include <flibc/str.h>
 #include <flibc/flibc.h>
 #include <flibc/math.h>
 #include <flibc/list.h>
 
 #include "libtest.h"
 
-TEST_DEF(test_sstrcpy)
+TEST_DEF(test_str_cpy)
 {
         char buf1[1];
         char buf16[16];
@@ -16,7 +16,7 @@ TEST_DEF(test_sstrcpy)
         /* copy of empty string */
         my_string = "";
 
-        ret = sstrcpy(buf1, sizeof(buf1), my_string);
+        ret = str_cpy(buf1, sizeof(buf1), my_string);
 
         TEST_ASSERT(ret == 0);
         TEST_ASSERT(strcmp(buf1, my_string) == 0);
@@ -24,7 +24,7 @@ TEST_DEF(test_sstrcpy)
         /* copy of normal string without truncated case */
         my_string = "Hello world !";
 
-        ret = sstrcpy(buf16, sizeof(buf16), my_string);
+        ret = str_cpy(buf16, sizeof(buf16), my_string);
 
         TEST_ASSERT(ret == strlen(buf16));
         TEST_ASSERT(strcmp(buf16, my_string) == 0);
@@ -32,7 +32,7 @@ TEST_DEF(test_sstrcpy)
         /* test return string copied is truncated and NULL terminated */
         my_string = "foobarfoobarfoobarfoo";
 
-        ret = sstrcpy(buf16, sizeof(buf16), my_string);
+        ret = str_cpy(buf16, sizeof(buf16), my_string);
 
         TEST_ASSERT(ret > sizeof(buf16) - 1);
         TEST_ASSERT(ret == strlen(my_string));
@@ -40,7 +40,7 @@ TEST_DEF(test_sstrcpy)
         TEST_ASSERT(strncmp(my_string, buf16, sizeof(buf16) - 1) == 0);
 }
 
-TEST_DEF(test_ssprintf)
+TEST_DEF(test_str_printf)
 {
         char buf16[16];
         int ret;
@@ -50,14 +50,14 @@ TEST_DEF(test_ssprintf)
         /* test truncation case and null terminated */
         my_string = "0123456789012345";
 
-        ret = ssprintf(buf16, sizeof(buf16), "%s", my_string);
+        ret = str_printf(buf16, sizeof(buf16), "%s", my_string);
 
         TEST_ASSERT(ret > (int)sizeof(buf16) - 1);
         TEST_ASSERT(ret == (int)strlen(my_string));
         TEST_ASSERT(buf16[sizeof(buf16) - 1] == '\0');
 }
 
-TEST_DEF(test_sstrcat)
+TEST_DEF(test_str_cat)
 {
         char buf16[16];
         const char *my_string = NULL;
@@ -67,7 +67,7 @@ TEST_DEF(test_sstrcat)
         buf16[0] = '\0';
 
         my_string = "01234567890123456789";
-        ret = sstrcat(buf16, sizeof(buf16), my_string);
+        ret = str_cat(buf16, sizeof(buf16), my_string);
 
         TEST_ASSERT(ret > sizeof(buf16) - 1);
         TEST_ASSERT(ret == strlen(my_string));
@@ -78,47 +78,47 @@ TEST_DEF(test_sstrcat)
 
         my_string = "12345";
 
-        ret = sstrcat(buf16, sizeof(buf16), my_string);
+        ret = str_cat(buf16, sizeof(buf16), my_string);
 
         TEST_ASSERT(ret == strlen(my_string));
         TEST_ASSERT(strcmp(buf16, my_string) == 0);
 
-        ret = sstrcat(buf16, sizeof(buf16), my_string);
+        ret = str_cat(buf16, sizeof(buf16), my_string);
 
         TEST_ASSERT(ret == 2 * strlen(my_string));
         TEST_ASSERT(strcmp(buf16, "1234512345") == 0);
 
-        ret = sstrcat(buf16, sizeof(buf16), my_string);
+        ret = str_cat(buf16, sizeof(buf16), my_string);
 
         TEST_ASSERT(ret == 3 * strlen(my_string));
         TEST_ASSERT(strcmp(buf16, "123451234512345") == 0);
 
-        ret = sstrcat(buf16, sizeof(buf16), my_string);
+        ret = str_cat(buf16, sizeof(buf16), my_string);
 
         TEST_ASSERT(ret > sizeof(buf16) - 1);
         TEST_ASSERT(ret == 4 * strlen(my_string));
         TEST_ASSERT(buf16[sizeof(buf16) - 1] == '\0');
 }
 
-TEST_DEF(test_strmatches)
+TEST_DEF(test_str_matches)
 {
         char buf[16];
 
         snprintf(buf, sizeof(buf), "teststring");
 
-        TEST_ASSERT(strmatches(buf, "teststring"));
-        TEST_ASSERT(!strmatches(buf, "test"));
-        TEST_ASSERT(!strmatches(buf, ""));
+        TEST_ASSERT(str_matches(buf, "teststring"));
+        TEST_ASSERT(!str_matches(buf, "test"));
+        TEST_ASSERT(!str_matches(buf, ""));
 }
 
-TEST_DEF(test_strempty)
+TEST_DEF(test_str_empty)
 {
-        TEST_ASSERT(strempty(""));
-        TEST_ASSERT(!strempty("a"));
-        TEST_ASSERT(!strempty("Hello World !"));
+        TEST_ASSERT(str_empty(""));
+        TEST_ASSERT(!str_empty("a"));
+        TEST_ASSERT(!str_empty("Hello World !"));
 }
 
-TEST_DEF(test_strsplit)
+TEST_DEF(test_str_split)
 {
         struct list_head list;
         unsigned int count,
@@ -137,7 +137,7 @@ TEST_DEF(test_strsplit)
 
         my_string = "one two three four five";
 
-        count = strsplit(my_string, " ", &list);
+        count = str_split(my_string, " ", &list);
 
         TEST_ASSERT(count == 5);
         i = 0;
@@ -157,7 +157,7 @@ TEST_DEF(test_strsplit)
 
         my_string = "therearenospacehere";
 
-        count = strsplit(my_string, " ", &list);
+        count = str_split(my_string, " ", &list);
         TEST_ASSERT(count == 1);
         i = 0;
         list_for_each_entry(item, &list, node)
@@ -186,7 +186,7 @@ TEST_DEF(test_strsplit)
 
         my_string = " one  two   three    four     five      ";
 
-        count = strsplit(my_string, " ", &list);
+        count = str_split(my_string, " ", &list);
         TEST_ASSERT(count == 5 + (1 + 1 + 2 + 3 + 4 + 5));
         i = 0;
         list_for_each_entry(item, &list, node)
@@ -200,7 +200,7 @@ TEST_DEF(test_strsplit)
         str_list_free(&list);
 }
 
-TEST_DEF(test_strltrim)
+TEST_DEF(test_str_ltrim)
 {
         const char *my_string = NULL,
                 *ret = NULL;
@@ -208,19 +208,19 @@ TEST_DEF(test_strltrim)
         /* basic test */
         my_string = " \t  \n  \r   Hello\n\r\n\t ";
 
-        ret = strltrim(my_string);
+        ret = str_ltrim(my_string);
 
         TEST_ASSERT(strcmp(ret, "Hello\n\r\n\t ") == 0);
 
         /* empty string */
         my_string = "";
 
-        ret = strltrim(my_string);
+        ret = str_ltrim(my_string);
 
         TEST_ASSERT(strcmp(ret, "") == 0);
 }
 
-TEST_DEF(test_strrtrim)
+TEST_DEF(test_str_rtrim)
 {
         char *my_string = NULL,
                 *ret = NULL;
@@ -228,7 +228,7 @@ TEST_DEF(test_strrtrim)
         /* basic test */
         my_string = strdup(" \t  \n  \r   Hello\n\r\n\t ");
 
-        ret = strrtrim(my_string);
+        ret = str_rtrim(my_string);
 
         TEST_ASSERT(strcmp(ret, " \t  \n  \r   Hello") == 0);
 
@@ -237,14 +237,14 @@ TEST_DEF(test_strrtrim)
         /* empty string */
         my_string = strdup("");
 
-        ret = strrtrim(my_string);
+        ret = str_rtrim(my_string);
 
         TEST_ASSERT(strcmp(ret, "") == 0);
 
         free(my_string);
 }
 
-TEST_DEF(test_strtrim)
+TEST_DEF(test_str_trim)
 {
         char *my_string = NULL;
         const char *ret = NULL;
@@ -252,7 +252,7 @@ TEST_DEF(test_strtrim)
         /* basic test */
         my_string = strdup(" \t  \n  \r   Hello\n\r\n\t ");
 
-        ret = strtrim(my_string);
+        ret = str_trim(my_string);
 
         TEST_ASSERT(strcmp(ret, "Hello") == 0);
 
@@ -261,14 +261,14 @@ TEST_DEF(test_strtrim)
         /* empty string */
         my_string = strdup("");
 
-        ret = strtrim(my_string);
+        ret = str_trim(my_string);
 
         TEST_ASSERT(strcmp(ret, "") == 0);
 
         free(my_string);
 }
 
-TEST_DEF(test_sstrtol)
+TEST_DEF(test_str_tol)
 {
         const char *my_string = NULL;
         long ret;
@@ -276,19 +276,19 @@ TEST_DEF(test_sstrtol)
         /* basic test */
         my_string = "13";
 
-        ret = sstrtol(my_string, 0, 10);
+        ret = str_tol(my_string, NULL, 10, -1);
 
         TEST_ASSERT(ret == 13);
 
         /* empty string */
         my_string = "";
 
-        ret = sstrtol(my_string, 0, 10);
+        ret = str_tol(my_string, NULL, 10, -1);
 
-        TEST_ASSERT(ret == 0);
+        TEST_ASSERT(ret == -1);
 }
 
-TEST_DEF(test_sstrtoll)
+TEST_DEF(test_str_toll)
 {
         const char *my_string = NULL;
         long long ret;
@@ -296,35 +296,35 @@ TEST_DEF(test_sstrtoll)
         /* basic test */
         my_string = "13";
 
-        ret = sstrtoll(my_string, 0, 10);
+        ret = str_toll(my_string, NULL, 10, -1);
 
         TEST_ASSERT(ret == 13);
 
         /* empty string */
         my_string = "";
 
-        ret = sstrtoll(my_string, 0, 10);
+        ret = str_toll(my_string, NULL, 10, -1);
 
-        TEST_ASSERT(ret == 0);
+        TEST_ASSERT(ret == -1);
 }
 
 int main(void)
 {
-        TEST_MODULE_INIT("flibc/string");
+        TEST_MODULE_INIT("flibc/str");
 
-        TEST_RUN(test_sstrcpy);
-        TEST_RUN(test_ssprintf);
-        TEST_RUN(test_sstrcat);
-        TEST_RUN(test_strmatches);
-        TEST_RUN(test_strempty);
+        TEST_RUN(test_str_cpy);
+        TEST_RUN(test_str_printf);
+        TEST_RUN(test_str_cat);
+        TEST_RUN(test_str_matches);
+        TEST_RUN(test_str_empty);
 
-        TEST_RUN(test_strsplit);
-        TEST_RUN(test_strltrim);
-        TEST_RUN(test_strrtrim);
-        TEST_RUN(test_strtrim);
+        TEST_RUN(test_str_split);
+        TEST_RUN(test_str_ltrim);
+        TEST_RUN(test_str_rtrim);
+        TEST_RUN(test_str_trim);
 
-        TEST_RUN(test_sstrtol);
-        TEST_RUN(test_sstrtoll);
+        TEST_RUN(test_str_tol);
+        TEST_RUN(test_str_toll);
 
         return TEST_MODULE_RETURN;
 }

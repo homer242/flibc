@@ -1,4 +1,7 @@
+flibc 0.2.0
+	* change api for str module (more simple, more visual)
+
 flibc 0.1.1
 	* add UNUSED() macro to mark variable not used (avoid compil warning)
 	* put \0 in ssprintf and svsprintf function if libc function return -1
-        * add tests/libtest.h in dist gzip
+	* add tests/libtest.h in dist gzip
