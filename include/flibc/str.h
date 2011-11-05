@@ -24,8 +24,8 @@ struct str_list_item {
  *
  *  - unlike strncpy(), destination buffer is always null terminated;
  *  - unlike strncpy(), return count of char copied (or should have 
- *    been copied if truncation occured);
- *  - if return > dst_size - 1, truncation occured.
+ *    been copied if truncation occurred);
+ *  - if return > dst_size - 1, truncation occurred.
  *
  * \param dst Destination buffer where source string will be copied
  * \param dst_size Size of destination buffer
@@ -40,8 +40,10 @@ size_t str_cpy(char *dst, size_t dst_size, const char *src);
  *
  *  Copy formatted output conversion into buffer.
  *
- *  - unlike vsnprintf(), destination buffer is always null terminated;
- *  - if return > dst_size - 1, truncation occured.
+ *  - vsnprintf as specified in ISO C99 is guaranteed to null-terminate but it
+ *    seems the behavior on certain platforms is different.
+ *  - destination buffer is always null terminated even if error occurred;
+ *  - if return > dst_size - 1, truncation occurred.
  *
  * \param dst Destination buffer where output will be copied
  * \param dst_size Size of destination buffer
@@ -56,8 +58,10 @@ int str_vprintf(char *dst, size_t dst_size, const char *fmt, va_list args);
  *
  *  Copy formatted output conversion into buffer.
  *
- *  - unlike snprintf(), destination buffer is always null terminated;
- *  - if return > dst_size - 1, truncation occured.
+ *  - snprintf as specified in ISO C99 is guaranteed to null-terminate but it
+ *    seems the behavior on certain platforms is different.
+ *  - destination buffer is always null terminated even if error occurred;
+ *  - if return > dst_size - 1, truncation occurred.
  *
  * \param dst Destination buffer where output will be copied
  * \param dst_size Size of destination buffer
