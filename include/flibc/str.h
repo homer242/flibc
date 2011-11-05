@@ -41,7 +41,9 @@ size_t str_cpy(char *dst, size_t dst_size, const char *src);
  *  Copy formatted output conversion into buffer.
  *
  *  - vsnprintf as specified in ISO C99 is guaranteed to null-terminate but it
- *    seems the behavior on certain platforms is different.
+ *    seems the behavior on certain platforms is different;
+ *  - never call this function with a fmt given by user input
+ *    (FIO30-C.+Exclude+user+input+from+format+strings);
  *  - destination buffer is always null terminated even if error occurred;
  *  - if return > dst_size - 1, truncation occurred.
  *
@@ -59,7 +61,9 @@ int str_vprintf(char *dst, size_t dst_size, const char *fmt, va_list args);
  *  Copy formatted output conversion into buffer.
  *
  *  - snprintf as specified in ISO C99 is guaranteed to null-terminate but it
- *    seems the behavior on certain platforms is different.
+ *    seems the behavior on certain platforms is different;
+ *  - never call this function with a fmt given by user input
+ *    (FIO30-C.+Exclude+user+input+from+format+strings);
  *  - destination buffer is always null terminated even if error occurred;
  *  - if return > dst_size - 1, truncation occurred.
  *
