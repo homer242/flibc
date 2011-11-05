@@ -308,6 +308,53 @@ TEST_DEF(test_str_toll)
         TEST_ASSERT(ret == -1);
 }
 
+TEST_DEF(test_str_list_toarray)
+{
+	struct list_head list;
+        unsigned int count,
+                ret,
+		i;
+        const char *my_string = NULL;
+	const char *ip_parts[4];
+
+        /* basic test */
+        const char *items_expect[] = {
+                "192",
+                "168",
+                "1",
+                "1",
+        };
+
+        my_string = "192.168.1.1";
+
+        count = str_split(my_string, ".", &list);
+
+	ret = str_list_toarray(&list, ip_parts, ARRAY_SIZE(ip_parts));
+
+	TEST_ASSERT(count == 4);
+	TEST_ASSERT(count == ret);
+
+	for(i = 0; i < ARRAY_SIZE(ip_parts); ++i)
+	{
+		TEST_ASSERT(strcmp(ip_parts[i], items_expect[i]) == 0);
+		/* printf("ip[%d] = %s\n", i, ip_parts[i]); */
+	}
+
+        str_list_free(&list);
+
+        /* number of item in list != of number of items in array wanted */
+        my_string = "foo";
+
+        count = str_split(my_string, ".", &list);
+
+	ret = str_list_toarray(&list, ip_parts, ARRAY_SIZE(ip_parts));
+
+	TEST_ASSERT(count == 1);
+	TEST_ASSERT(count == ret);
+
+        str_list_free(&list);
+}
+
 int main(void)
 {
         TEST_MODULE_INIT("flibc/str");
@@ -325,6 +372,8 @@ int main(void)
 
         TEST_RUN(test_str_tol);
         TEST_RUN(test_str_toll);
+
+        TEST_RUN(test_str_list_toarray);
 
         return TEST_MODULE_RETURN;
 }

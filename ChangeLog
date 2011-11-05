@@ -1,5 +1,6 @@
 flibc 0.2.0
 	* change api for str module (more simple, more visual)
+	* implement new str function str_list_toarray
 
 flibc 0.1.1
 	* add UNUSED() macro to mark variable not used (avoid compil warning)

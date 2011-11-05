@@ -8,30 +8,14 @@
 #include "flibc/list.h"
 
 /*
- * structs and functions to deal with list of string
+ * struct str_list_item
+ *
+ *  Struct used when deal with list of string.
  */
 struct str_list_item {
         char *value;
         struct list_head node;
 };
-
-static inline void str_list_init(struct list_head *list)
-{
-        INIT_LIST_HEAD(list);
-}
-
-static inline void str_list_free(struct list_head *list)
-{
-        struct str_list_item *item1 = NULL,
-                *item2 = NULL;
-
-        list_for_each_entry_safe(item1, item2, list, node)
-        {
-                free(item1->value);
-                free(item1);
-                list_del(&(item1->node));
-        }
-}
 
 /* 
  * str_cpy (aka "safe strcpy") - wrapper function to strncpy
@@ -221,6 +205,39 @@ long str_tol(const char *str, char **endptr, int base, long dfl);
  * \return long long integer
  */
 long long str_toll(const char *str, char **endptr, int base, long long dfl);
+
+/*
+ * str_list_init
+ *
+ * Init a list of str.
+ *
+ * \param list The list which will be initialized
+ * \return void
+ */
+void str_list_init(struct list_head *list);
+
+/*
+ * str_list_free
+ *
+ * Free a list of str.
+ *
+ * \param list The list which will be freed
+ * \return void
+ */
+void str_list_free(struct list_head *list);
+
+/*
+ * str_list_toarray
+ *
+ * Fill a string array with a list of str.
+ *
+ * \param list The list which contains str_list_item
+ * \param array The array of const char
+ * \param size The size of array 
+ * \return int number of item copied
+ */
+unsigned int str_list_toarray(struct list_head *list,
+			      const char **array, size_t size);
 
 #endif
 

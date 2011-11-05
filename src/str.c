@@ -141,7 +141,7 @@ long str_tol(const char *str, char **endptr, int base, long dfl)
         }
 
         errno = 0;
-        ret = strtol(str, NULL, base);
+        ret = strtol(str, endptr, base);
         if (errno != 0)
         {
                 return dfl;
@@ -160,11 +160,50 @@ long long str_toll(const char *str, char **endptr, int base, long long dfl)
         }
 
         errno = 0;
-        ret = strtoll(str, NULL, base);
+        ret = strtoll(str, endptr, base);
         if (errno != 0)
         {
                 return dfl;
         }
 
         return ret;      
+}
+
+void str_list_init(struct list_head *list)
+{
+        INIT_LIST_HEAD(list);
+}
+
+void str_list_free(struct list_head *list)
+{
+        struct str_list_item *item1 = NULL,
+                *item2 = NULL;
+
+        list_for_each_entry_safe(item1, item2, list, node)
+        {
+                free(item1->value);
+                free(item1);
+                list_del(&(item1->node));
+        }
+}
+
+unsigned int str_list_toarray(struct list_head *list,
+			      const char **array, size_t size)
+{
+        struct str_list_item *item1 = NULL;
+        unsigned int count = 0;
+
+        list_for_each_entry(item1, list, node)
+        {
+                array[count] = item1->value;
+
+	        ++count;
+
+		if(count == size)
+		{
+                        break;
+		}
+	}
+
+	return count;
 }
