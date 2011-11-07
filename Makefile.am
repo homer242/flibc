@@ -8,8 +8,7 @@ EXTRA_DIST = tests/libtest.h
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = flibc.pc
 
-pkginclude_HEADERS = $(flc_includedir)/dict.h \
-		     $(flc_includedir)/flibc.h \
+pkginclude_HEADERS = $(flc_includedir)/flibc.h \
 		     $(flc_includedir)/list.h \
 		     $(flc_includedir)/math.h \
 		     $(flc_includedir)/log.h \
