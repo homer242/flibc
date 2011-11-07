@@ -8,40 +8,24 @@
 #include "flibc/list.h"
 
 /*
- * structs and functions to deal with list of string
+ * struct str_list_item
+ *
+ *  Struct used when deal with list of string.
  */
 struct str_list_item {
         char *value;
         struct list_head node;
 };
 
-static inline void str_list_init(struct list_head *list)
-{
-        INIT_LIST_HEAD(list);
-}
-
-static inline void str_list_free(struct list_head *list)
-{
-        struct str_list_item *item1 = NULL,
-                *item2 = NULL;
-
-        list_for_each_entry_safe(item1, item2, list, node)
-        {
-                free(item1->value);
-                free(item1);
-                list_del(&(item1->node));
-        }
-}
-
 /* 
- * sstrcpy (aka "safe strcpy") - wrapper function to strncpy
+ * str_cpy (aka "safe strcpy") - wrapper function to strncpy
  *
  *  Copy string into buffer.
  *
  *  - unlike strncpy(), destination buffer is always null terminated;
  *  - unlike strncpy(), return count of char copied (or should have 
- *    been copied if truncation occured);
- *  - if return > dst_size - 1, truncation occured.
+ *    been copied if truncation occurred);
+ *  - if return > dst_size - 1, truncation occurred.
  *
  * \param dst Destination buffer where source string will be copied
  * \param dst_size Size of destination buffer
@@ -49,15 +33,19 @@ static inline void str_list_free(struct list_head *list)
  * \return count of char copied (or should have been copied in case
  *                               of truncation)
  */
-size_t sstrcpy(char *dst, size_t dst_size, const char *src);
+size_t str_cpy(char *dst, size_t dst_size, const char *src);
 
 /*
- * svsprintf (aka "safe vsprintf") - wrapper function to vsnprintf
+ * str_vprintf (aka "safe vsprintf") - wrapper function to vsnprintf
  *
  *  Copy formatted output conversion into buffer.
  *
- *  - unlike vsnprintf(), destination buffer is always null terminated;
- *  - if return > dst_size - 1, truncation occured.
+ *  - vsnprintf as specified in ISO C99 is guaranteed to null-terminate but it
+ *    seems the behavior on certain platforms is different;
+ *  - never call this function with a fmt given by user input
+ *    (FIO30-C.+Exclude+user+input+from+format+strings);
+ *  - destination buffer is always null terminated even if error occurred;
+ *  - if return > dst_size - 1, truncation occurred.
  *
  * \param dst Destination buffer where output will be copied
  * \param dst_size Size of destination buffer
@@ -65,15 +53,19 @@ size_t sstrcpy(char *dst, size_t dst_size, const char *src);
  * \param args va_list
  * \return same return as vsnprintf
  */
-int svsprintf(char *dst, size_t dst_size, const char *fmt, va_list args);
+int str_vprintf(char *dst, size_t dst_size, const char *fmt, va_list args);
 
 /*
- * ssprintf (aka "safe sprintf") - wrapper function ssprintf
+ * str_printf (aka "safe sprintf") - wrapper function snprintf
  *
  *  Copy formatted output conversion into buffer.
  *
- *  - unlike snprintf(), destination buffer is always null terminated;
- *  - if return > dst_size - 1, truncation occured.
+ *  - snprintf as specified in ISO C99 is guaranteed to null-terminate but it
+ *    seems the behavior on certain platforms is different;
+ *  - never call this function with a fmt given by user input
+ *    (FIO30-C.+Exclude+user+input+from+format+strings);
+ *  - destination buffer is always null terminated even if error occurred;
+ *  - if return > dst_size - 1, truncation occurred.
  *
  * \param dst Destination buffer where output will be copied
  * \param dst_size Size of destination buffer
@@ -81,10 +73,10 @@ int svsprintf(char *dst, size_t dst_size, const char *fmt, va_list args);
  * \param ... The arguments
  * \return same return as snprintf
  */
-int ssprintf(char *dst, size_t dst_size, const char *fmt, ...);
+int str_printf(char *dst, size_t dst_size, const char *fmt, ...);
 
 /* 
- * sstrcat (aka "simple strcat")
+ * str_cat (aka "simple strcat")
  *
  *  Concat string into buffer.
  *
@@ -102,10 +94,10 @@ int ssprintf(char *dst, size_t dst_size, const char *fmt, ...);
  *                                                    in buffer in case of
  *                                                    truncation)
  */
-size_t sstrcat(char *dst, size_t dst_size, const char *src);
+size_t str_cat(char *dst, size_t dst_size, const char *src);
 
 /*
- * strmatches
+ * str_matches
  *
  *  Compare a string to a constant string.
  *
@@ -115,7 +107,7 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src);
  * \param cstr Must be an constant string !
  * \return 0 if strings doesn't matches, != 0 if matches.
  */
-#define strmatches(s, c_str)                                            \
+#define str_matches(s, c_str)						\
         ({                                                              \
                 const char __dummy[] = c_str;                           \
                 (void)(&__dummy);                                       \
@@ -123,16 +115,16 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src);
         })
 
 /*
- * strempty
+ * str_empty
  *
  *  Test if string is empty.
  *
  * \return 0 if string isn't empty, different from 0 if empty
  */
-int strempty(const char *str);
+int str_empty(const char *str);
 
 /*
- * strsplit
+ * str_split
  *
  *  Split string into a list of words, using sep as the word delimiter
  *
@@ -140,7 +132,7 @@ int strempty(const char *str);
  *
  * Example:
  *
- *      count = strsplit("Hello World!", " ", &list);
+ *      count = str_split("Hello World!", " ", &list);
  *      list_for_each_entry(item, &list, node)
  *      {
  *             // you stuff //
@@ -149,73 +141,111 @@ int strempty(const char *str);
  *
  * \param str Data string
  * \param sep The word delimiter
- * \param list Pointer to an empty list where strsplit put
+ * \param list Pointer to an empty list where str_split put
  *             struct str_list_item items.
  * \return count of words found and stored in list
  */
-unsigned int strsplit(const char *str, const char *sep, struct list_head *list);
+unsigned int str_split(const char *str, const char *sep,
+		       struct list_head *list);
 
 /*
- * strltrim
+ * str_ltrim
  *
  * Remove space, \t, \n, \r at start of the string.
  *
  * \param str string to left trim
  * \return pointer to the string left trimed
  */
-const char* strltrim(const char *str);
+const char* str_ltrim(const char *str);
 
 /*
- * strrtrim
+ * str_rtrim
  *
  * Remove space, \t, \n, \r at end of the string.
  *
  * \param str string to right trim
  * \return string right trimed
  */
-char* strrtrim(char *str);
+char* str_rtrim(char *str);
 
 /*
- * strtrim
+ * str_trim
  *
  * Remove space, \t, \n, \r at start and end of the string.
  *
  * \param str string to right trim
  * \return string trimed
  */
-static inline const char* strtrim(char *str)
+static inline const char* str_trim(char *str)
 {
-	return strltrim(strrtrim(str));
+	return str_ltrim(str_rtrim(str));
 }
 
 /*
- * sstrtol (aka "simple strtol") - wrapper to strtol
+ * str_tol (aka "simple strtol") - wrapper to strtol
  *
  *  Convert a string to a long integer
  *
+ * - This function request new argument "dfl" unlike strtol;
  * - Check errno return. If strtol fails, return dfl value.
  *
  * \brief Convert a string to a long integer
  * \param str string to convert
+ * \param endptr first character in str which is not integer
+ * \param base the base of the integer in string
  * \param dfl default value if convertion failed
- * \param base the base of the integer in string (like strtol)
  * \return long integer
  */
-long sstrtol(const char *str, long dfl, int base);
+long str_tol(const char *str, char **endptr, int base, long dfl);
 
 /*
- * sstrtoll (aka "safe strtoll") - wrapper to strtoll
+ * str_toll (aka "simple strtoll") - wrapper to strtoll
  *
  *  Convert a string to a long long integer
  *
+ * - This function request new argument "dfl" unlike strtoll;
  * - Check errno return. If strtol fails, return dfl value.
  *
  * \param str string to convert
+ * \param endptr first character in str which is not integer
+ * \param base the base of the integer in string
  * \param dfl default value if convertion failed
- * \param base the base of the integer in string (like strtol)
  * \return long long integer
  */
-long long sstrtoll(const char *str, long long dfl, int base);
+long long str_toll(const char *str, char **endptr, int base, long long dfl);
+
+/*
+ * str_list_init
+ *
+ * Init a list of str.
+ *
+ * \param list The list which will be initialized
+ * \return void
+ */
+void str_list_init(struct list_head *list);
+
+/*
+ * str_list_free
+ *
+ * Free a list of str.
+ *
+ * \param list The list which will be freed
+ * \return void
+ */
+void str_list_free(struct list_head *list);
+
+/*
+ * str_list_toarray
+ *
+ * Fill a string array with a list of str.
+ *
+ * \param list The list which contains str_list_item
+ * \param array The array of const char
+ * \param size The size of array 
+ * \return int number of item copied
+ */
+unsigned int str_list_toarray(struct list_head *list,
+			      const char **array, size_t size);
 
 #endif
 

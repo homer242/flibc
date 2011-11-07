@@ -1,4 +1,4 @@
-#include "flibc/string.h"
+#include "flibc/str.h"
 
 #include <errno.h>
 #include <stdlib.h>
@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-size_t sstrcpy(char *dst, size_t dst_size, const char *src)
+size_t str_cpy(char *dst, size_t dst_size, const char *src)
 {
         size_t src_len = strlen(src);
 
@@ -16,7 +16,7 @@ size_t sstrcpy(char *dst, size_t dst_size, const char *src)
         return (src_len >= dst_size ? src_len : strlen(dst));
 }
 
-int svsprintf(char *dst, size_t size, const char *fmt, va_list args)
+int str_vprintf(char *dst, size_t size, const char *fmt, va_list args)
 {
         int ret;
 
@@ -34,19 +34,19 @@ int svsprintf(char *dst, size_t size, const char *fmt, va_list args)
 	return ret;
 }
 
-int ssprintf(char *dst, size_t size, const char *fmt, ...)
+int str_printf(char *dst, size_t size, const char *fmt, ...)
 {
         int ret;
         va_list args;
 
 	va_start(args, fmt);
-	ret = svsprintf(dst, size, fmt, args);
+	ret = str_vprintf(dst, size, fmt, args);
 	va_end(args);
 
 	return ret;
 }
 
-size_t sstrcat(char *dst, size_t dst_size, const char *src)
+size_t str_cat(char *dst, size_t dst_size, const char *src)
 {
         size_t dst_len = strlen(dst);
         size_t dst_remain_size;
@@ -56,17 +56,17 @@ size_t sstrcat(char *dst, size_t dst_size, const char *src)
         dst_p = dst + dst_len;
         dst_remain_size = dst_size - dst_len;
 
-        ret = sstrcpy(dst_p, dst_remain_size, src);
+        ret = str_cpy(dst_p, dst_remain_size, src);
 
         return ret + dst_len;
 }
 
-int strempty(const char *str)
+int str_empty(const char *str)
 {
         return (str[0] == '\0');
 }
 
-unsigned int strsplit(const char *str, const char *sep, struct list_head *list)
+unsigned int str_split(const char *str, const char *sep, struct list_head *list)
 {
 	const char *str_p = str;
 	char *sep_in_str = NULL;
@@ -99,7 +99,7 @@ unsigned int strsplit(const char *str, const char *sep, struct list_head *list)
 	return i;
 }
 
-const char* strltrim(const char *str)
+const char* str_ltrim(const char *str)
 {
         while(*str != '\0')
         {
@@ -114,7 +114,7 @@ const char* strltrim(const char *str)
         return str;
 }
 
-char* strrtrim(char *str)
+char* str_rtrim(char *str)
 {
         char *end = str + strlen(str);
 
@@ -131,7 +131,7 @@ char* strrtrim(char *str)
         return str;
 }
 
-long sstrtol(const char *str, long dfl, int base)
+long str_tol(const char *str, char **endptr, int base, long dfl)
 {
         long ret;
 
@@ -141,7 +141,7 @@ long sstrtol(const char *str, long dfl, int base)
         }
 
         errno = 0;
-        ret = strtol(str, NULL, base);
+        ret = strtol(str, endptr, base);
         if (errno != 0)
         {
                 return dfl;
@@ -150,7 +150,7 @@ long sstrtol(const char *str, long dfl, int base)
         return ret;
 }
 
-long long sstrtoll(const char *str, long long dfl, int base)
+long long str_toll(const char *str, char **endptr, int base, long long dfl)
 {
         long long ret;
 
@@ -160,11 +160,50 @@ long long sstrtoll(const char *str, long long dfl, int base)
         }
 
         errno = 0;
-        ret = strtoll(str, NULL, base);
+        ret = strtoll(str, endptr, base);
         if (errno != 0)
         {
                 return dfl;
         }
 
         return ret;      
+}
+
+void str_list_init(struct list_head *list)
+{
+        INIT_LIST_HEAD(list);
+}
+
+void str_list_free(struct list_head *list)
+{
+        struct str_list_item *item1 = NULL,
+                *item2 = NULL;
+
+        list_for_each_entry_safe(item1, item2, list, node)
+        {
+                free(item1->value);
+                free(item1);
+                list_del(&(item1->node));
+        }
+}
+
+unsigned int str_list_toarray(struct list_head *list,
+			      const char **array, size_t size)
+{
+        struct str_list_item *item1 = NULL;
+        unsigned int count = 0;
+
+        list_for_each_entry(item1, list, node)
+        {
+                array[count] = item1->value;
+
+	        ++count;
+
+		if(count == size)
+		{
+                        break;
+		}
+	}
+
+	return count;
 }
