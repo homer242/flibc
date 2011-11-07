@@ -18,7 +18,7 @@ struct str_list_item {
 };
 
 /* 
- * str_cpy (aka "safe strcpy") - wrapper function to strncpy
+ * str_copy (aka "safe strcpy") - wrapper function to strncpy
  *
  *  Copy string into buffer.
  *
@@ -33,7 +33,7 @@ struct str_list_item {
  * \return count of char copied (or should have been copied in case
  *                               of truncation)
  */
-size_t str_cpy(char *dst, size_t dst_size, const char *src);
+size_t str_copy(char *dst, size_t dst_size, const char *src);
 
 /*
  * str_vprintf (aka "safe vsprintf") - wrapper function to vsnprintf

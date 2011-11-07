@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-size_t str_cpy(char *dst, size_t dst_size, const char *src)
+size_t str_copy(char *dst, size_t dst_size, const char *src)
 {
         size_t src_len = strlen(src);
 
@@ -56,7 +56,7 @@ size_t str_cat(char *dst, size_t dst_size, const char *src)
         dst_p = dst + dst_len;
         dst_remain_size = dst_size - dst_len;
 
-        ret = str_cpy(dst_p, dst_remain_size, src);
+        ret = str_copy(dst_p, dst_remain_size, src);
 
         return ret + dst_len;
 }

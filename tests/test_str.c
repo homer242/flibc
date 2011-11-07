@@ -5,7 +5,7 @@
 
 #include "libtest.h"
 
-TEST_DEF(test_str_cpy)
+TEST_DEF(test_str_copy)
 {
         char buf1[1];
         char buf16[16];
@@ -16,7 +16,7 @@ TEST_DEF(test_str_cpy)
         /* copy of empty string */
         my_string = "";
 
-        ret = str_cpy(buf1, sizeof(buf1), my_string);
+        ret = str_copy(buf1, sizeof(buf1), my_string);
 
         TEST_ASSERT(ret == 0);
         TEST_ASSERT(strcmp(buf1, my_string) == 0);
@@ -24,7 +24,7 @@ TEST_DEF(test_str_cpy)
         /* copy of normal string without truncated case */
         my_string = "Hello world !";
 
-        ret = str_cpy(buf16, sizeof(buf16), my_string);
+        ret = str_copy(buf16, sizeof(buf16), my_string);
 
         TEST_ASSERT(ret == strlen(buf16));
         TEST_ASSERT(strcmp(buf16, my_string) == 0);
@@ -32,7 +32,7 @@ TEST_DEF(test_str_cpy)
         /* test return string copied is truncated and NULL terminated */
         my_string = "foobarfoobarfoobarfoo";
 
-        ret = str_cpy(buf16, sizeof(buf16), my_string);
+        ret = str_copy(buf16, sizeof(buf16), my_string);
 
         TEST_ASSERT(ret > sizeof(buf16) - 1);
         TEST_ASSERT(ret == strlen(my_string));
@@ -359,7 +359,7 @@ int main(void)
 {
         TEST_MODULE_INIT("flibc/str");
 
-        TEST_RUN(test_str_cpy);
+        TEST_RUN(test_str_copy);
         TEST_RUN(test_str_printf);
         TEST_RUN(test_str_cat);
         TEST_RUN(test_str_matches);
