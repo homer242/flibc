@@ -1,5 +1,5 @@
-#ifndef _FLIBC_STRING_H_
-#define _FLIBC_STRING_H_
+#ifndef _FLIBC_STR_H_
+#define _FLIBC_STR_H_
 
 #include <stdlib.h>
 #include <string.h>
