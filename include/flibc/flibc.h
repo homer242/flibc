@@ -20,8 +20,12 @@
 #ifndef _FLIBC_H_
 #define _FLIBC_H_
 
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+#if !defined(ARRAY_SIZE)
+ #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+#endif
 
-#define UNUSED(x)     (void)(x)
+#if !defined(UNUSED)
+ #define UNUSED(x)     (void)(x)
+#endif
 
 #endif
