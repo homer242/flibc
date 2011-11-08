@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2011 Anthony Viallard
+ *
+ *    This file is part of Flibc (copied from kernel source tree
+ *                                and licensed under the GPL v2
+ *                                as per the whole kernel source tree).
+ *
+ * Flibc is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Flibc is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Flibc. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 /*!
  * \file lib/list.h Copied from the Linux kernel source tree
  *
