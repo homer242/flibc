@@ -1,3 +1,6 @@
+flibc 0.2.1
+	* change api for log_open function (add more options)
+
 flibc 0.2.0
 	* change api for str module (more simple, more visual)
 	* implement new str function str_list_toarray
