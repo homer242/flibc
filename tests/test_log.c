@@ -17,32 +17,34 @@
  * along with Flibc. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "flibc/log.h"
+#define ENABLE_LOG_DEBUG 1
+#include <flibc/log.h>
+#include <flibc/flibc.h>
 
-#include <stdlib.h>
-#include <stdarg.h>
+#include "libtest.h"
 
-void log_open(const char *ident, int option, int facility)
+TEST_DEF(test_log)
 {
-	openlog(ident, option, facility);
+	/* only test if there macro issues */
+        log_open("flibc_test_log", LOG_PID, LOG_USER);
 
-	return;
+        log_write(LOG_INFO, "Hello World !");
+
+        log_info("It's a log info message");
+        log_notice("It's a log notice message");
+        log_error("It's a log error message");
+        log_debug("It's a log debug message");
+
+        log_close();
+
+        TEST_ASSERT(1);
 }
 
-void log_close(void)
+int main(void)
 {
-	closelog();
+        TEST_MODULE_INIT("flibc/log");
 
-	return;
-}
+        TEST_RUN(test_log);
 
-void log_write(int priority, const char *fmt, ...)
-{
-	va_list args;
-
-	va_start(args, fmt);
-	vsyslog(priority, fmt, args);
-	va_end(args);
-
-	return;
+        return TEST_MODULE_RETURN;
 }
