@@ -22,9 +22,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-void log_open(const char *ident)
+void log_open(const char *ident, int option, int facility)
 {
-	openlog(ident, LOG_PID, LOG_DAEMON);
+	openlog(ident, option, facility);
 
 	return;
 }
@@ -36,12 +36,12 @@ void log_close(void)
 	return;
 }
 
-void log_write(int level, const char *fmt, ...)
+void log_write(int priority, const char *fmt, ...)
 {
 	va_list args;
 
 	va_start(args, fmt);
-	vsyslog(level, fmt, args);
+	vsyslog(priority, fmt, args);
 	va_end(args);
 
 	return;

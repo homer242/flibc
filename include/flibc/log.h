@@ -21,10 +21,11 @@
 #define _FLIBC_LOG_H_
 
 /*
- * log module
- * -----------------------
+ * log.h
  *
- * - You can enable log_debug() by defining ENABLE_LOG_DEBUG macro
+ * - The pretty things here are log_* macro. log_open, log_close and
+ *   log_write functions are just to harmonize use of log interface;
+ * - You can enable log_debug() by defining ENABLE_LOG_DEBUG macro.
  */
 
 #include <syslog.h>
@@ -48,8 +49,44 @@
 #define log_debug(fmt, ...) do {;} while(0)
 #endif
 
-void log_open(const char *ident);
+/*
+ * log_open - wrapper function to openlog (man 3 syslog)
+ *
+ *  Open a connection to the system logger.
+ *
+ * - View syslog man for more documentation.
+ *
+ * \param ident string prepended to every message
+ * \param option specifies flags which control the operation of open and write
+ * \param facility set default facilities for write
+ * \return void
+ */
+void log_open(const char *ident, int option, int facility);
+
+/*
+ * log_close - wrapper function to closelog (man 3 syslog)
+ *
+ *  Close the connection used for the system logger.
+ *
+ * - View syslog man for more documentation.
+ *
+ * \param void
+ * \return void
+ */
 void log_close(void);
-void log_write(int level, const char *fmt, ...);
+
+/*
+ * log_write - wrapper function to vsyslog (man 3 syslog)
+ *
+ *  Write message to the system logger.
+ *
+ * - View syslog man for more documentation.
+ *
+ * \param priority facility and the level values (ORed)
+ * \param fmt Formated string
+ * \param ... The arguments
+ * \return void
+ */
+void log_write(int priority, const char *fmt, ...);
 
 #endif
