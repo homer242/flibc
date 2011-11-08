@@ -1,5 +1,10 @@
+flibc 0.2.2
+	* avoid some macro redefinition
+
 flibc 0.2.1
 	* change api for log_open function (add more options)
+	* remove log.c and switch to macro
+	* add ENABLE_VT102_COLOR macro to enable color in term vt102
 
 flibc 0.2.0
 	* change api for str module (more simple, more visual)
