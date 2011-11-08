@@ -23,9 +23,11 @@
 /*
  * log.h
  *
- * - The pretty things here are log_* macro. log_open, log_close and
- *   log_write functions are just to harmonize use of log interface;
+ * - The pretty things here are first log_* macros (log_info, log_debug, ...).
+ *   Macros log_open, log_close and log_write are just to harmonize
+ *   use of log interface;
  * - You can enable log_debug() by defining ENABLE_LOG_DEBUG macro.
+ * - You can enable color logs by defining ENABLE_VT102_COLOR macro.
  */
 
 #include <syslog.h>
@@ -50,43 +52,33 @@
 #endif
 
 /*
- * log_open - wrapper function to openlog (man 3 syslog)
+ * log_open - wrapper macro to openlog
  *
  *  Open a connection to the system logger.
  *
- * - View syslog man for more documentation.
- *
- * \param ident string prepended to every message
- * \param option specifies flags which control the operation of open and write
- * \param facility set default facilities for write
- * \return void
+ * (view syslog man page for more documentation)
  */
-void log_open(const char *ident, int option, int facility);
+#define log_open(ident, opt, facility) \
+        openlog(ident, opt, facility)
 
 /*
- * log_close - wrapper function to closelog (man 3 syslog)
+ * log_close - wrapper macro to closelog
  *
  *  Close the connection used for the system logger.
  *
- * - View syslog man for more documentation.
- *
- * \param void
- * \return void
+ * (view syslog man page for more documentation)
  */
-void log_close(void);
+#define log_close() \
+        closelog()
 
 /*
- * log_write - wrapper function to vsyslog (man 3 syslog)
+ * log_write - wrapper macro to syslog
  *
  *  Write message to the system logger.
  *
- * - View syslog man for more documentation.
- *
- * \param priority facility and the level values (ORed)
- * \param fmt Formated string
- * \param ... The arguments
- * \return void
+ * (view syslog man page for more documentation)
  */
-void log_write(int priority, const char *fmt, ...);
+#define log_write(priority, fmt, ...) \
+        syslog(priority, fmt, ##__VA_ARGS__)
 
 #endif
