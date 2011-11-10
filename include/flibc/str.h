@@ -130,7 +130,7 @@ size_t str_cat(char *dst, size_t dst_size, const char *src);
         ({                                                              \
                 const char __dummy[] = c_str;                           \
                 (void)(&__dummy);                                       \
-                (s != NULL && memcmp (s, c_str, sizeof(c_str)) == 0);   \
+                (memcmp (s, c_str, sizeof(c_str)) == 0);   \
         })
 
 /*
