@@ -17,12 +17,12 @@
  * along with Flibc. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define ENABLE_VT102_COLOR 1
 #include <flibc/str.h>
 #include <flibc/flibc.h>
 #include <flibc/math.h>
 #include <flibc/list.h>
-
-#include "libtest.h"
+#include <flibc/unit.h>
 
 TEST_DEF(test_str_copy)
 {

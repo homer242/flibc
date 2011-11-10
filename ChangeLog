@@ -1,3 +1,9 @@
+flibc 0.2.4:
+	* add flibc/unit.h for unit test in C
+
+flibc 0.2.3
+	* don't check NULL arg in str_matches
+
 flibc 0.2.2
 	* avoid some macro redefinition
 

@@ -17,11 +17,11 @@
  * along with Flibc. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define ENABLE_VT102_COLOR 1
 #define ENABLE_LOG_DEBUG 1
 #include <flibc/log.h>
 #include <flibc/flibc.h>
-
-#include "libtest.h"
+#include <flibc/unit.h>
 
 TEST_DEF(test_log)
 {

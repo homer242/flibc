@@ -27,12 +27,13 @@
  *   Macros log_open, log_close and log_write are just to harmonize
  *   use of log interface;
  * - You can enable log_debug() by defining ENABLE_LOG_DEBUG macro.
- * - You can enable color logs by defining ENABLE_VT102_COLOR macro.
+ * - You can enable color logs by defining ENABLE_VT102_COLOR macro
+ *   (before any flibc includes).
  */
 
 #include <syslog.h>
 
-#include "flibc/vt102.h"
+#include <flibc/vt102.h>
 
 #define log_info(fmt, ...)                                          \
 	log_write(LOG_INFO, fmt, ##__VA_ARGS__)
