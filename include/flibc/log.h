@@ -40,7 +40,10 @@
 
 #define log_notice(fmt, ...)                                        \
         log_write(LOG_NOTICE, VT102_COLOR_PURPLE(fmt), ##__VA_ARGS__)
-        
+
+#define log_warn(fmt, ...)                                         \
+        log_write(LOG_ERR, VT102_COLOR_YELLOW(fmt), ##__VA_ARGS__)
+
 #define log_error(fmt, ...)                                         \
         log_write(LOG_ERR, VT102_COLOR_RED(fmt), ##__VA_ARGS__)
 
