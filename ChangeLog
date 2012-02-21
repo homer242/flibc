@@ -1,3 +1,6 @@
+flibc 0.2.5:
+	* add io module
+
 flibc 0.2.4:
 	* add flibc/unit.h for unit test in C
 
