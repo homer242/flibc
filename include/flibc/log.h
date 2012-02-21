@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Anthony Viallard
+ * Copyright (c) 2011-2012 Anthony Viallard
  *
  *    This file is part of Flibc.
  *
