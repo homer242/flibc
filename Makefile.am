@@ -12,6 +12,7 @@ pkginclude_HEADERS = $(flc_includedir)/flibc.h \
 		     $(flc_includedir)/log.h \
 		     $(flc_includedir)/vt102.h \
 		     $(flc_includedir)/str.h \
+		     $(flc_includedir)/io.h \
 		     $(flc_includedir)/unit.h
 
 SUBDIRS = src tests
