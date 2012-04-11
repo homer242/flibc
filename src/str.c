@@ -122,7 +122,7 @@ const char* str_ltrim(const char *str)
 {
         while(*str != '\0')
         {
-                if(strchr(" \t\n\r", *str) == NULL)
+                if(strchr(" \t\n\r\v", *str) == NULL)
                 {
                         return str;
                 }
@@ -139,7 +139,7 @@ char* str_rtrim(char *str)
 
         while(end-- > str)
         {
-                if(strchr(" \t\n\r", *end) == NULL)
+                if(strchr(" \t\n\r\v", *end) == NULL)
                 {
                         return str;
                 }

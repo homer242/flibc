@@ -180,7 +180,7 @@ const char* str_ltrim(const char *str);
 /*
  * str_rtrim
  *
- * Remove space, \t, \n, \r at end of the string.
+ * Remove space, \t, \n, \r and \v at end of the string.
  *
  * \param str string to right trim
  * \return string right trimed
@@ -190,7 +190,7 @@ char* str_rtrim(char *str);
 /*
  * str_trim
  *
- * Remove space, \t, \n, \r at start and end of the string.
+ * Remove space, \t, \n, \r and \v at start and end of the string.
  *
  * \param str string to right trim
  * \return string trimed

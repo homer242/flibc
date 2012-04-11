@@ -225,11 +225,11 @@ TEST_DEF(test_str_ltrim)
                 *ret = NULL;
 
         /* basic test */
-        my_string = " \t  \n  \r   Hello\n\r\n\t ";
+        my_string = " \t  \n \v \r   Hello\n\r\n\t \v";
 
         ret = str_ltrim(my_string);
 
-        TEST_ASSERT(strcmp(ret, "Hello\n\r\n\t ") == 0);
+        TEST_ASSERT(strcmp(ret, "Hello\n\r\n\t \v") == 0);
 
         /* empty string */
         my_string = "";
@@ -245,11 +245,11 @@ TEST_DEF(test_str_rtrim)
                 *ret = NULL;
 
         /* basic test */
-        my_string = strdup(" \t  \n  \r   Hello\n\r\n\t ");
+        my_string = strdup(" \t  \n  \r \v  Hello\n\r\n\t \v");
 
         ret = str_rtrim(my_string);
 
-        TEST_ASSERT(strcmp(ret, " \t  \n  \r   Hello") == 0);
+        TEST_ASSERT(strcmp(ret, " \t  \n  \r \v  Hello") == 0);
 
         free(my_string);
 
