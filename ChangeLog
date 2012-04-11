@@ -1,3 +1,6 @@
+flibc 0.2.6:
+	* trim caracter \v too in str_*trim functions
+
 flibc 0.2.5:
 	* add io module
 
