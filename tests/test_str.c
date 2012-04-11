@@ -227,16 +227,23 @@ TEST_DEF(test_str_ltrim)
         /* basic test */
         my_string = " \t  \n \v \r   Hello\n\r\n\t \v";
 
-        ret = str_ltrim(my_string);
+        ret = str_ltrim_blanks(my_string);
 
         TEST_ASSERT(strcmp(ret, "Hello\n\r\n\t \v") == 0);
 
         /* empty string */
         my_string = "";
 
-        ret = str_ltrim(my_string);
+        ret = str_ltrim_blanks(my_string);
 
         TEST_ASSERT(strcmp(ret, "") == 0);
+
+        /* zzzzemptyzzzz */
+        my_string = "zzzzemptyzzzz";
+
+        ret = str_ltrim(my_string, "z");
+
+        TEST_ASSERT(strcmp(ret, "emptyzzzz") == 0);
 }
 
 TEST_DEF(test_str_rtrim)
@@ -247,7 +254,7 @@ TEST_DEF(test_str_rtrim)
         /* basic test */
         my_string = strdup(" \t  \n  \r \v  Hello\n\r\n\t \v");
 
-        ret = str_rtrim(my_string);
+        ret = str_rtrim_blanks(my_string);
 
         TEST_ASSERT(strcmp(ret, " \t  \n  \r \v  Hello") == 0);
 
@@ -256,9 +263,18 @@ TEST_DEF(test_str_rtrim)
         /* empty string */
         my_string = strdup("");
 
-        ret = str_rtrim(my_string);
+        ret = str_rtrim_blanks(my_string);
 
         TEST_ASSERT(strcmp(ret, "") == 0);
+
+        free(my_string);
+
+        /* zzzzemptyzzzz */
+        my_string = strdup("zzzzemptyzzzz");
+
+        ret = str_rtrim(my_string, "z");
+
+        TEST_ASSERT(strcmp(ret, "zzzzempty") == 0);
 
         free(my_string);
 }
@@ -271,7 +287,7 @@ TEST_DEF(test_str_trim)
         /* basic test */
         my_string = strdup(" \t  \n  \r   Hello\n\r\n\t ");
 
-        ret = str_trim(my_string);
+        ret = str_trim_blanks(my_string);
 
         TEST_ASSERT(strcmp(ret, "Hello") == 0);
 
@@ -280,9 +296,18 @@ TEST_DEF(test_str_trim)
         /* empty string */
         my_string = strdup("");
 
-        ret = str_trim(my_string);
+        ret = str_trim_blanks(my_string);
 
         TEST_ASSERT(strcmp(ret, "") == 0);
+
+        free(my_string);
+
+        /* aaaaemptyzzzz */
+        my_string = strdup("aaaaemptyzzzz");
+
+        ret = str_trim(my_string, "az");
+
+        TEST_ASSERT(strcmp(ret, "empty") == 0);
 
         free(my_string);
 }

@@ -170,35 +170,44 @@ unsigned int str_split(const char *str, const char *sep,
 /*
  * str_ltrim
  *
- * Remove space, \t, \n, \r at start of the string.
+ * Remove caracters defined in trimchr argument at start of the string.
  *
  * \param str string to left trim
+ * \param trimchr caracters to remove
  * \return pointer to the string left trimed
  */
-const char* str_ltrim(const char *str);
+const char* str_ltrim(const char *str, const char *trimchr);
 
 /*
  * str_rtrim
  *
- * Remove space, \t, \n, \r and \v at end of the string.
+ * Remove caracters defined in trimchr argument at start of the string.
  *
  * \param str string to right trim
+ * \param trimchr caracters to remove
  * \return string right trimed
  */
-char* str_rtrim(char *str);
+char* str_rtrim(char *str, const char *trimchr);
 
 /*
  * str_trim
  *
- * Remove space, \t, \n, \r and \v at start and end of the string.
+ * Remove caracters defined in trimchr argument at start and end of the string.
  *
  * \param str string to right trim
  * \return string trimed
  */
-static inline const char* str_trim(char *str)
+static inline const char* str_trim(char *str, const char *trimchr)
 {
-	return str_ltrim(str_rtrim(str));
+	return str_ltrim(str_rtrim(str, trimchr), trimchr);
 }
+
+/*
+ * Helper macros for trim spaces, \t, \n, \r and \v.
+ */
+#define str_ltrim_blanks(str) str_ltrim(str, " \t\n\r\v")
+#define str_rtrim_blanks(str) str_rtrim(str, " \t\n\r\v")
+#define str_trim_blanks(str) str_trim(str, " \t\n\r\v")
 
 /*
  * str_tol (aka "simple strtol") - wrapper to strtol

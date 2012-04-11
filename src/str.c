@@ -118,11 +118,11 @@ unsigned int str_split(const char *str, const char *sep, struct list_head *list)
 	return i;
 }
 
-const char* str_ltrim(const char *str)
+const char* str_ltrim(const char *str, const char *trimchr)
 {
         while(*str != '\0')
         {
-                if(strchr(" \t\n\r\v", *str) == NULL)
+                if(strchr(trimchr, *str) == NULL)
                 {
                         return str;
                 }
@@ -133,13 +133,13 @@ const char* str_ltrim(const char *str)
         return str;
 }
 
-char* str_rtrim(char *str)
+char* str_rtrim(char *str, const char *trimchr)
 {
         char *end = str + strlen(str);
 
         while(end-- > str)
         {
-                if(strchr(" \t\n\r\v", *end) == NULL)
+                if(strchr(trimchr, *end) == NULL)
                 {
                         return str;
                 }
