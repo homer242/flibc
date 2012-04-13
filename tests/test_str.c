@@ -408,6 +408,41 @@ TEST_DEF(test_str_replace)
         TEST_ASSERT(buf16[sizeof(buf16) - 1] == '\0');
 }
 
+TEST_DEF(test_str_lcut)
+{
+        const char *p = NULL;
+
+        /* simple test */
+        p = str_lcut("http://www.linux.org", "http://");
+
+        TEST_ASSERT(strcmp("www.linux.org", p) == 0);
+
+        /* no cut this ! */
+        p = str_lcut("xhttp://www.linux.org", "http://");
+
+        TEST_ASSERT(strcmp("xhttp://www.linux.org", p) == 0);
+}
+
+TEST_DEF(test_str_rcut)
+{
+        char buf256[256];
+        char *p = NULL;
+
+        /* simple test */
+        snprintf(buf256, sizeof(buf256), "mynameisnobody.txt");
+
+        p = str_rcut(buf256, ".txt");
+
+        TEST_ASSERT(strcmp("mynameisnobody", p) == 0);
+
+        /* no cut this ! */
+        snprintf(buf256, sizeof(buf256), "mynameisnobody.txt");
+
+        p = str_rcut(buf256, ".tx");
+
+        TEST_ASSERT(strcmp("mynameisnobody.txt", p) == 0);
+}
+
 TEST_DEF(test_str_tol)
 {
         const char *my_string = NULL;
@@ -515,6 +550,9 @@ int main(void)
         TEST_RUN(test_str_endwith);
 
         TEST_RUN(test_str_replace);
+
+        TEST_RUN(test_str_lcut);
+        TEST_RUN(test_str_rcut);
 
         TEST_RUN(test_str_tol);
         TEST_RUN(test_str_toll);

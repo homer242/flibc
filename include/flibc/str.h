@@ -279,9 +279,44 @@ static inline int str_endwith(const char *haystack, const char *word)
  * \param toword the new string which replace fromword
  * \param output a buffer with a good size to store result
  * \param output_size the size of buffer output
+ * \return 0 if string has been replaced, 1 otherwise
  */
 int str_replace(const char *haystack, const char *fromword, const char *toword,
                 char *output, size_t output_size);
+
+/*
+ * str_lcut
+ *
+ *  remove one string at left of another string
+ *
+ * \param haystack the base string
+ * \param word the string to cut at left of base string
+ * \return the string cutted (or not, if word hasn't found at left of haystack)
+ */
+static inline const char *str_lcut(const char *haystack, const char *word)
+{
+        return (str_startwith(haystack, word) ?
+                haystack + strlen(word) : haystack);
+}
+
+/*
+ * str_rcut
+ *
+ *  remove one string at right of another string
+ *
+ * \param haystack the base string
+ * \param word the string to cut at right of base string
+ * \return the string cutted (or not, if word hasn't found at right of haystack)
+ */
+static inline char *str_rcut(char *haystack, const char *word)
+{
+        if(str_endwith(haystack, word))
+        {
+                haystack[strlen(haystack) - strlen(word)] = '\0';
+        }
+
+        return haystack;
+}
 
 /*
  * str_tol (aka "simple strtol") - wrapper to strtol

@@ -5,6 +5,7 @@ flibc 0.2.6:
 	* add str_startwith and str_endwith functions
 	* add str_catf function
 	* add str_replace function
+	* add str_lcut and str_rcut functions
 
 flibc 0.2.5:
 	* add io module

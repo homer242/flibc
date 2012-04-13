@@ -32,7 +32,7 @@ if test "x$GCC" = "xyes"; then
    AX_CFLAGS_GCC_OPTION(-Wstrict-overflow=5)
    AX_CFLAGS_GCC_OPTION(-Wwrite-strings)
    AX_CFLAGS_GCC_OPTION(-Waggregate-return)
-   AX_CFLAGS_GCC_OPTION(-Wcast-qual)
+#   AX_CFLAGS_GCC_OPTION(-Wcast-qual)
    AX_CFLAGS_GCC_OPTION(-Wswitch-default)
 #   AX_CFLAGS_GCC_OPTION(-Wswitch-enum)
    AX_CFLAGS_GCC_OPTION(-Wconversion)

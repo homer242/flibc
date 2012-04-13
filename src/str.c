@@ -176,8 +176,7 @@ int str_replace(const char *haystack, const char *fromword, const char *toword,
 {
         const char *p = NULL,
                 *haystack_p = haystack;
-        size_t fromword_len = strlen(fromword),
-                toword_len = strlen(toword);
+        size_t fromword_len = strlen(fromword);
 
         output[0] = '\0';
 
