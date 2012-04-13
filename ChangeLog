@@ -3,6 +3,8 @@ flibc 0.2.6:
 	* add str_trim_blanks, str_ltrim_blanks and str_rtrim_blanks
 	* add \v caracter when trim blanks caracters
 	* add str_startwith and str_endwith functions
+	* add str_catf function
+	* add str_replace function
 
 flibc 0.2.5:
 	* add io module

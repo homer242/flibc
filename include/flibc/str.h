@@ -116,6 +116,28 @@ int str_printf(char *dst, size_t dst_size, const char *fmt, ...);
 size_t str_cat(char *dst, size_t dst_size, const char *src);
 
 /*
+ * str_catf
+ *
+ *  Concat formatted string into buffer.
+ *
+ * - Be carefull, dst string buffer must be initiliazed before first call
+ *   (with dst[0] = '\0' for example);
+ * - destination buffer is always null terminated;
+ * - unlike strncat, dst_size is the full size of dst, not space left !;
+ * - copy at most dst_size - 1 characters;
+ * - if return > dst_size - 1, truncation occurred.
+ *
+ * \param dst Destination buffer where source string will be concat
+ * \param dst_size Size of destination buffer (Total size not remaining)
+ * \param fmt Formated string
+ * \param ... The arguments
+ * \return total count of char in destination buffer (or should have been
+ *                                                    in buffer in case of
+ *                                                    truncation)
+ */
+size_t str_catf(char *dst, size_t dst_size, const char *fmt, ...);
+
+/*
  * str_matches
  *
  *  Compare a string to a constant string.
@@ -246,6 +268,20 @@ static inline int str_endwith(const char *haystack, const char *word)
                        word,
                        word_len) == 0;
 }
+
+/*
+ * str_replace
+ *
+ *  replace one string to another one in a string
+ *
+ * \param haystack the base string
+ * \param fromword the string to replace
+ * \param toword the new string which replace fromword
+ * \param output a buffer with a good size to store result
+ * \param output_size the size of buffer output
+ */
+int str_replace(const char *haystack, const char *fromword, const char *toword,
+                char *output, size_t output_size);
 
 /*
  * str_tol (aka "simple strtol") - wrapper to strtol

@@ -80,6 +80,27 @@ size_t str_cat(char *dst, size_t dst_size, const char *src)
         return ret + dst_len;
 }
 
+size_t str_catf(char *dst, size_t dst_size, const char *fmt, ...)
+{
+        size_t dst_len = strlen(dst);
+        size_t dst_remain_size;
+        char *dst_p = NULL;
+        int ret;
+        va_list args;
+
+        dst_p = dst + dst_len;
+        dst_remain_size = dst_size - dst_len;
+
+	va_start(args, fmt);
+	ret = str_vprintf(dst_p, dst_remain_size, fmt, args);
+	va_end(args);
+
+        if(ret < 0)
+                ret = 0;
+
+        return (size_t)ret + dst_len;
+}
+
 int str_empty(const char *str)
 {
         return (str[0] == '\0');
@@ -148,6 +169,39 @@ char* str_rtrim(char *str, const char *trimchr)
         }
 
         return str;
+}
+
+int str_replace(const char *haystack, const char *fromword, const char *toword,
+                char *output, size_t output_size)
+{
+        const char *p = NULL,
+                *haystack_p = haystack;
+        size_t fromword_len = strlen(fromword),
+                toword_len = strlen(toword);
+
+        output[0] = '\0';
+
+        while((p = strstr(haystack_p, fromword)) != NULL)
+        {
+                if(str_catf(output, output_size,
+                            "%.*s", p - haystack_p, haystack_p) >= output_size
+                   || str_cat(output, output_size, toword) >= output_size)
+                {
+                        /* truncation */
+                        return -1;
+                }
+
+                p += fromword_len;
+                haystack_p = p;
+        }
+
+        if(str_cat(output, output_size, haystack_p) >= output_size)
+        {
+                /* truncation */
+                return -1;
+        }
+
+        return 0;
 }
 
 long str_tol(const char *str, char **endptr, int base, long dfl)

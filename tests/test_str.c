@@ -119,6 +119,62 @@ TEST_DEF(test_str_cat)
         TEST_ASSERT(buf16[sizeof(buf16) - 1] == '\0');
 }
 
+TEST_DEF(test_str_catf)
+{
+        char buf16[16],
+                buf4[4];
+        const char *my_string1 = NULL,
+                *my_string2 = NULL;
+        size_t ret;
+
+        /* test truncation case and null terminated */
+        buf16[0] = '\0';
+
+        my_string1 = "0123456789";
+        my_string2 = "0123456789";
+        ret = str_catf(buf16, sizeof(buf16), "%s%s", my_string1, my_string2);
+
+        TEST_ASSERT(ret > sizeof(buf16) - 1);
+        TEST_ASSERT(ret == (strlen(my_string1) + strlen(my_string2)));
+        TEST_ASSERT(buf16[sizeof(buf16) - 1] == '\0');
+
+        /* basic test and truncation/nullended case */
+        buf16[0] = '\0';
+
+        my_string1 = "12345";
+
+        ret = str_catf(buf16, sizeof(buf16), "%s", my_string1);
+
+        TEST_ASSERT(ret == strlen(my_string1));
+        TEST_ASSERT(strcmp(buf16, my_string1) == 0);
+
+        ret = str_catf(buf16, sizeof(buf16), "%s", my_string1);
+
+        TEST_ASSERT(ret == 2 * strlen(my_string1));
+        TEST_ASSERT(strcmp(buf16, "1234512345") == 0);
+
+        ret = str_catf(buf16, sizeof(buf16), my_string1);
+
+        TEST_ASSERT(ret == 3 * strlen(my_string1));
+        TEST_ASSERT(strcmp(buf16, "123451234512345") == 0);
+
+        ret = str_catf(buf16, sizeof(buf16), my_string1);
+
+        TEST_ASSERT(ret > sizeof(buf16) - 1);
+        TEST_ASSERT(strcmp(buf16, "123451234512345") == 0);
+        TEST_ASSERT(ret == 4 * strlen(my_string1));
+        TEST_ASSERT(buf16[sizeof(buf16) - 1] == '\0');
+
+        /* format test */
+        buf4[0] = '\0';
+
+        ret = str_catf(buf4, sizeof(buf4), "%d", 4444);
+
+        TEST_ASSERT(ret > sizeof(buf4) - 1);
+        TEST_ASSERT(strcmp(buf4, "444") == 0);
+        TEST_ASSERT(buf4[sizeof(buf4) - 1] == '\0');
+}
+
 TEST_DEF(test_str_matches)
 {
         char buf[16];
@@ -328,6 +384,30 @@ TEST_DEF(test_str_endwith)
         TEST_ASSERT(!str_endwith("orld", "world"));
 }
 
+TEST_DEF(test_str_replace)
+{
+        char buffer[256],
+                buf16[16];
+        int ret;
+
+        /* simple test */
+        ret = str_replace("http://www.github.com/",
+                          "http", "flocfloc",
+                          buffer, sizeof(buffer));
+
+        TEST_ASSERT(ret == 0);
+        TEST_ASSERT(strcmp(buffer, "flocfloc://www.github.com/") == 0);
+
+        /* test truncation */
+        ret = str_replace("01234567890123456789",
+                          "1", "0",
+                          buf16, sizeof(buf16));
+
+        TEST_ASSERT(ret != 0);
+        TEST_ASSERT(strcmp(buf16, "002345678900234") == 0);
+        TEST_ASSERT(buf16[sizeof(buf16) - 1] == '\0');
+}
+
 TEST_DEF(test_str_tol)
 {
         const char *my_string = NULL;
@@ -422,6 +502,7 @@ int main(void)
         TEST_RUN(test_str_copy);
         TEST_RUN(test_str_printf);
         TEST_RUN(test_str_cat);
+        TEST_RUN(test_str_catf);
         TEST_RUN(test_str_matches);
         TEST_RUN(test_str_empty);
 
@@ -432,6 +513,8 @@ int main(void)
 
         TEST_RUN(test_str_startwith);
         TEST_RUN(test_str_endwith);
+
+        TEST_RUN(test_str_replace);
 
         TEST_RUN(test_str_tol);
         TEST_RUN(test_str_toll);
