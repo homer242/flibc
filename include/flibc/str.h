@@ -194,7 +194,7 @@ char* str_rtrim(char *str, const char *trimchr);
  *
  * Remove caracters defined in trimchr argument at start and end of the string.
  *
- * \param str string to right trim
+ * \param str string to trim
  * \return string trimed
  */
 static inline const char* str_trim(char *str, const char *trimchr)
@@ -208,6 +208,44 @@ static inline const char* str_trim(char *str, const char *trimchr)
 #define str_ltrim_blanks(str) str_ltrim(str, " \t\n\r\v")
 #define str_rtrim_blanks(str) str_rtrim(str, " \t\n\r\v")
 #define str_trim_blanks(str) str_trim(str, " \t\n\r\v")
+
+/*
+ * str_startwith
+ *
+ *  Tell if one string is at start of another one
+ *
+ * \param haystack the base string
+ * \param word the string to seek at start of haystack
+ * \return 1 if found, 0 otherwise
+ */
+static inline int str_startwith(const char *haystack, const char *word)
+{
+        return (strncmp(haystack, word, strlen(word)) == 0);
+}
+
+/*
+ * str_endwith
+ *
+ *  Tell if one string is at end of another one
+ *
+ * \param haystack the base string
+ * \param word the string to seek at end of haystack
+ * \return 1 if found, 0 otherwise
+ */
+static inline int str_endwith(const char *haystack, const char *word)
+{
+        size_t word_len = strlen(word),
+                haystack_len = strlen(haystack);
+
+        if(word_len > haystack_len)
+        {
+                return 0;
+        }
+
+        return strncmp(haystack + haystack_len - word_len,
+                       word,
+                       word_len) == 0;
+}
 
 /*
  * str_tol (aka "simple strtol") - wrapper to strtol

@@ -2,6 +2,7 @@ flibc 0.2.6:
 	* change API for str_*trim functions. Add new arguments which contain the list of caracters to be trimed.
 	* add str_trim_blanks, str_ltrim_blanks and str_rtrim_blanks
 	* add \v caracter when trim blanks caracters
+	* add str_startwith and str_endwith functions
 
 flibc 0.2.5:
 	* add io module

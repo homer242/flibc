@@ -312,6 +312,22 @@ TEST_DEF(test_str_trim)
         free(my_string);
 }
 
+TEST_DEF(test_str_startwith)
+{
+        TEST_ASSERT(str_startwith("hello world", "hello"));
+        TEST_ASSERT(!str_startwith("hello world", "ello"));
+
+        TEST_ASSERT(!str_startwith("hell", "hello"));
+}
+
+TEST_DEF(test_str_endwith)
+{
+        TEST_ASSERT(str_endwith("hello world", "world"));
+        TEST_ASSERT(!str_endwith("hello world", "worl"));
+
+        TEST_ASSERT(!str_endwith("orld", "world"));
+}
+
 TEST_DEF(test_str_tol)
 {
         const char *my_string = NULL;
@@ -413,6 +429,9 @@ int main(void)
         TEST_RUN(test_str_ltrim);
         TEST_RUN(test_str_rtrim);
         TEST_RUN(test_str_trim);
+
+        TEST_RUN(test_str_startwith);
+        TEST_RUN(test_str_endwith);
 
         TEST_RUN(test_str_tol);
         TEST_RUN(test_str_toll);
