@@ -41,6 +41,9 @@ ssize_t io_write(int fd, const void *buf, size_t len);
  *
  *  Read data from file by his descriptor
  *
+ * - If you want read a string, be sure to put the \0 caracter at
+ *   the value of the return (when this function doesn't return -1 !)
+ *
  * \param fd File descriptor
  * \param dst Destination pointer
  * \param len Number of byte being read and copied to destination pointer
@@ -65,6 +68,9 @@ ssize_t io_file_write(const char *filename, const void *buf, size_t len);
  * io_file_read
  *
  *  Read data from file by his filename
+ *
+ * - If you want read a string, be sure to put the \0 caracter at
+ *   the value of the return (when this function doesn't return -1 !)
  *
  * \param fd File descriptor
  * \param dst Destination pointer
