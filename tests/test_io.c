@@ -62,6 +62,7 @@ TEST_DEF(test_io_write_and_read)
         ret = io_read(fd, buf, sizeof(buf));
 
         TEST_ASSERT(ret == (ssize_t)strlen(str_to_wr));
+	buf[ret] = '\0';
         TEST_ASSERT(strcmp(str_to_wr, buf) == 0);
 
         close(fd);
@@ -100,6 +101,7 @@ TEST_DEF(test_io_file_write_and_read)
         ret = io_file_read("/tmp/test_io_write", buf, sizeof(buf));
 
         TEST_ASSERT(ret == (ssize_t)strlen(str_to_wr));
+	buf[ret] = '\0';
         TEST_ASSERT(strcmp(str_to_wr, buf) == 0);
 
         /* reopen, read and compare */
