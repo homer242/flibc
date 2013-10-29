@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Anthony Viallard
+ * Copyright (c) 2011-2013 Anthony Viallard
  *
  *    This file is part of Flibc.
  *
@@ -530,6 +530,48 @@ TEST_DEF(test_str_list_toarray)
         str_list_free(&list);
 }
 
+TEST_DEF(test_str_list_add_and_foreach)
+{
+	struct list_head str_list;
+	struct str_list_item *str_list_item;
+        const char *items[] = {
+                "the world is crazy",
+                "allright",
+                "one good thing about music",
+                "when it hurts you, you feel no pain",
+        };
+        unsigned int found,
+		i;
+	int ret;
+
+	str_list_init(&str_list);
+
+	for(i = 0; i < ARRAY_SIZE(items); ++i)
+	{
+		ret = str_list_add(&str_list, items[i]);
+
+		TEST_ASSERT(ret == 0);
+	}
+
+	str_list_for_each_entry(&str_list, str_list_item)
+	{
+		for(i = 0; i < ARRAY_SIZE(items); ++i)
+		{
+			found = 0;
+			if(strcmp(str_list_item->value,
+				  items[i]) == 0)
+			{
+				found = 1;
+				break;
+			}
+		}
+
+		TEST_ASSERT(found);
+	}
+
+	str_list_free(&str_list);
+}
+
 int main(void)
 {
         TEST_MODULE_INIT("flibc/str");
@@ -558,6 +600,7 @@ int main(void)
         TEST_RUN(test_str_toll);
 
         TEST_RUN(test_str_list_toarray);
+        TEST_RUN(test_str_list_add_and_foreach);
 
         return TEST_MODULE_RETURN;
 }

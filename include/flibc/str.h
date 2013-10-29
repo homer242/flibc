@@ -372,6 +372,18 @@ void str_list_init(struct list_head *list);
 void str_list_free(struct list_head *list);
 
 /*
+ * str_list_add
+ *
+ * Add a string in list.
+ *
+ * \param list The list where the string will be added
+ * \param added The string to be added
+ * \return 0 if the string was added, -1 otherwise
+ */
+int str_list_add(struct list_head *list,
+		 const char *added);
+
+/*
  * str_list_toarray
  *
  * Fill a string array with a list of str.
@@ -383,6 +395,12 @@ void str_list_free(struct list_head *list);
  */
 unsigned int str_list_toarray(struct list_head *list,
 			      const char **array, size_t size);
+
+/*
+ * Walk over string list
+ */
+#define str_list_for_each_entry(list, item)	\
+	list_for_each_entry(item, list, node)
 
 #endif
 

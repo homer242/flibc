@@ -246,6 +246,27 @@ void str_list_init(struct list_head *list)
         INIT_LIST_HEAD(list);
 }
 
+int str_list_add(struct list_head *list, const char *added)
+{
+	struct str_list_item *item;
+
+	item = calloc(1, sizeof(*item));
+	if(item == NULL)
+	{
+		return -1;
+	}
+
+	item->value = strdup(added);
+	if(item->value == NULL)
+	{
+		free(item);
+		return -1;
+	}
+
+	list_add(&item->node, list);
+	return 0;
+}
+
 void str_list_free(struct list_head *list)
 {
         struct str_list_item *item1 = NULL,
