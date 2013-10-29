@@ -1,6 +1,7 @@
 flibc 0.2.7:
 	* add missing io.h header
 	* add str_list_add and str_list_for_each_entry functions
+	* fix flibc.pc file (wrong include dir)
 
 flibc 0.2.6:
 	* change API for str_*trim functions. Add new arguments which contain the list of caracters to be trimed.
