@@ -8,4 +8,4 @@ Description: the Forty second Library for C (flibc)
 Requires:
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -lflibc
-Cflags: -I${includedir}/flibc
+Cflags: -I${includedir}
