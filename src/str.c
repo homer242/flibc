@@ -109,23 +109,42 @@ int str_empty(const char *str)
 unsigned int str_split(const char *str, const char *sep,
 		       struct str_list *list)
 {
-	char *strrw;
-	const char *val;
+	char *strrw = NULL,
+		*strrw_p = NULL,
+		*sep_in_str = NULL;
+	size_t len_sep = strlen(sep);
+
+	strrw = strdup(str);
+	if(strrw == NULL)
+	{
+		return 0;
+	}
 
         str_list_init(list);
 
-	strrw = strdup(str);
+	strrw_p = strrw;
+	while((sep_in_str = strstr(strrw_p, sep)) != NULL)
+	{
+		*sep_in_str = '\0';
 
-	for(val = strtok(strrw, sep);
-            val != NULL;
-            val = strtok(NULL, sep))
-        {
-                if(str_list_add(list, val) != 0)
+		if(str_list_add(list, strrw_p) != 0)
 		{
-			str_list_free(list);
-			return 0;
+			str_list_cleanup(list);
+			goto ex_on_populate;
 		}
-        }
+
+		strrw_p = sep_in_str + len_sep;
+	}
+
+	/* copy the last argument */
+	if(str_list_add(list, strrw_p) != 0)
+	{
+		str_list_cleanup(list);
+		goto ex_on_populate;
+	}
+
+ex_on_populate:
+	free(strrw);
 
 	return str_list_length(list);
 }
@@ -275,6 +294,7 @@ int str_list_remove(struct str_list *list, const char *str)
 			free(item);
 			list_del(&(item->node));
 			++found;
+			--list->count;
 		}
         }
 
@@ -286,7 +306,7 @@ unsigned int str_list_length(struct str_list *list)
 	return list->count;
 }
 
-void str_list_free(struct str_list *list)
+void str_list_cleanup(struct str_list *list)
 {
         struct str_list_item *item = NULL,
                 *item_safe = NULL;
@@ -297,6 +317,8 @@ void str_list_free(struct str_list *list)
                 free(item);
                 list_del(&(item->node));
         }
+
+	list->count = 0;
 }
 
 unsigned int str_list_toarray(struct str_list *list,

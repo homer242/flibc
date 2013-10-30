@@ -224,7 +224,7 @@ TEST_DEF(test_str_split)
                 ++i;
         }
         TEST_ASSERT(count == i);
-        str_list_free(&list);
+        str_list_cleanup(&list);
 
         /* no found delimiter in string */
         const char *items_expect2[] = {
@@ -243,31 +243,62 @@ TEST_DEF(test_str_split)
                 ++i;
         }
         TEST_ASSERT(count == i);
-        str_list_free(&list);
+        str_list_cleanup(&list);
 
         /* garbage in string */
         const char *items_expect3[] = {
+                "",
                 "one",
+                "",
                 "two",
+		"", "",
                 "three",
+		"","","",
                 "four",
+		"","","","",
                 "five",
+		"","","","","",
         };
 
-        my_string = " one  two   three    four     five      ";
+        my_string = ",one,,two,,,three,,,,four,,,,,five,,,,,";
 
-        count = str_split(my_string, " ", &list);
+        count = str_split(my_string, ",", &list);
+	/*printf(" * count = %d | expect = %ld\n",
+	  count, ARRAY_SIZE(items_expect3));*/
         TEST_ASSERT(count == ARRAY_SIZE(items_expect3));
         i = 0;
         str_list_for_each_entry(&list, item)
         {
-                printf(" * item = %s, strlen()=%zu\n",
-                       item->value, strlen(item->value));
+                /* printf(" * item = %s, strlen()= %zu\n", */
+                /*        item->value, strlen(item->value)); */
                 TEST_ASSERT(strcmp(items_expect3[i], item->value) == 0);
                 ++i;
         }
         TEST_ASSERT(count == i);
-        str_list_free(&list);
+        str_list_cleanup(&list);
+
+	/* empty values */
+	const char *items_expect4[] = {
+                "dnsmasq",
+                "",
+		"",
+		"",
+        };
+
+	my_string = "dnsmasq,,,";
+
+	count = str_split(my_string, ",", &list);
+        TEST_ASSERT(count == ARRAY_SIZE(items_expect4));
+        i = 0;
+        str_list_for_each_entry(&list, item)
+        {
+                /*printf(" * item = %s, strlen()= %zu\n",
+		  item->value, strlen(item->value));*/
+                TEST_ASSERT(strcmp(items_expect4[i], item->value) == 0);
+                ++i;
+        }
+
+        str_list_cleanup(&list);
 }
 
 TEST_DEF(test_str_ltrim)
@@ -510,7 +541,7 @@ TEST_DEF(test_str_list_toarray)
 		TEST_ASSERT(strcmp(ip_parts[i], items_expect[i]) == 0);
 	}
 
-        str_list_free(&list);
+        str_list_cleanup(&list);
 
         /* number of item in list != of number of items in array wanted */
         my_string = "foo";
@@ -522,7 +553,7 @@ TEST_DEF(test_str_list_toarray)
 	TEST_ASSERT(count == 1);
 	TEST_ASSERT(count == ret);
 
-        str_list_free(&list);
+        str_list_cleanup(&list);
 }
 
 TEST_DEF(test_str_list_add_remove)
@@ -575,7 +606,7 @@ TEST_DEF(test_str_list_add_remove)
 
 	TEST_ASSERT(found == 0);
 
-	str_list_free(&str_list);
+	str_list_cleanup(&str_list);
 }
 
 int main(void)

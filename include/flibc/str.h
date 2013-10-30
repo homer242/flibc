@@ -173,7 +173,7 @@ int str_empty(const char *str);
  *  Split string into a list of NONEMPTY words,
  *   using sep as the word delimiter.
  *
- * - Think to free list (with str_list_free()) after you finish with it;
+ * - Think to cleanup list (with str_list_cleanup()) after you finished with it;
  * - str_split("foo    bar", " ", &list) returns a list of 2 items (foo and bar)
  *
  * Example:
@@ -183,7 +183,7 @@ int str_empty(const char *str);
  *      {
  *             // you stuff //
  *      }
- *      str_list_free(&list);
+ *      str_list_cleanup(&list);
  *
  * \param str Data string
  * \param sep The word delimiter
@@ -367,14 +367,14 @@ long long str_toll(const char *str, char **endptr, int base, long long dfl);
 void str_list_init(struct str_list *list);
 
 /*
- * str_list_free
+ * str_list_cleanup
  *
  * Free a list of str.
  *
  * \param list The list which will be freed
  * \return void
  */
-void str_list_free(struct str_list *list);
+void str_list_cleanup(struct str_list *list);
 
 /*
  * str_list_add
