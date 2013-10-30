@@ -27,13 +27,16 @@
 #include "flibc/list.h"
 
 /*
- * struct str_list_item
- *
- *  Struct used when deal with list of string.
+ * Structures used when deal with list of string.
  */
 struct str_list_item {
         char *value;
         struct list_head node;
+};
+
+struct str_list {
+	struct list_head head;
+	unsigned int count;
 };
 
 /* 
@@ -167,9 +170,11 @@ int str_empty(const char *str);
 /*
  * str_split
  *
- *  Split string into a list of words, using sep as the word delimiter
+ *  Split string into a list of NONEMPTY words,
+ *   using sep as the word delimiter.
  *
  * - Think to free list (with str_list_free()) after you finish with it;
+ * - str_split("foo    bar", " ", &list) returns a list of 2 items (foo and bar)
  *
  * Example:
  *
@@ -187,7 +192,7 @@ int str_empty(const char *str);
  * \return count of words found and stored in list
  */
 unsigned int str_split(const char *str, const char *sep,
-		       struct list_head *list);
+		       struct str_list *list);
 
 /*
  * str_ltrim
@@ -359,7 +364,7 @@ long long str_toll(const char *str, char **endptr, int base, long long dfl);
  * \param list The list which will be initialized
  * \return void
  */
-void str_list_init(struct list_head *list);
+void str_list_init(struct str_list *list);
 
 /*
  * str_list_free
@@ -369,7 +374,7 @@ void str_list_init(struct list_head *list);
  * \param list The list which will be freed
  * \return void
  */
-void str_list_free(struct list_head *list);
+void str_list_free(struct str_list *list);
 
 /*
  * str_list_add
@@ -377,11 +382,33 @@ void str_list_free(struct list_head *list);
  * Add a string in list.
  *
  * \param list The list where the string will be added
- * \param added The string to be added
+ * \param str The string to be added
  * \return 0 if the string was added, -1 otherwise
  */
-int str_list_add(struct list_head *list,
-		 const char *added);
+int str_list_add(struct str_list *list, const char *str);
+
+/*
+ * str_list_remove
+ *
+ * Remove a string in list.
+ *
+ * - Each matched string item in list will be removed.
+ *
+ * \param list The list where the string will be added
+ * \param str The string to be removed
+ * \return the number of remove or 0 if none string item was removed
+ */
+int str_list_remove(struct str_list *list, const char *str);
+
+/*
+ * str_list_length
+ *
+ * Return the length of the list
+ *
+ * \param list The list where the string will be added
+ * \return number of item in the list
+ */
+unsigned int str_list_length(struct str_list *list);
 
 /*
  * str_list_toarray
@@ -393,14 +420,14 @@ int str_list_add(struct list_head *list,
  * \param size The size of array 
  * \return int number of item copied
  */
-unsigned int str_list_toarray(struct list_head *list,
+unsigned int str_list_toarray(struct str_list *list,
 			      const char **array, size_t size);
 
 /*
  * Walk over string list
  */
 #define str_list_for_each_entry(list, item)	\
-	list_for_each_entry(item, list, node)
+	list_for_each_entry(item, &((list)->head), node)
 
 #endif
 

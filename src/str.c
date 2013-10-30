@@ -106,37 +106,28 @@ int str_empty(const char *str)
         return (str[0] == '\0');
 }
 
-unsigned int str_split(const char *str, const char *sep, struct list_head *list)
+unsigned int str_split(const char *str, const char *sep,
+		       struct str_list *list)
 {
-	const char *str_p = str;
-	char *sep_in_str = NULL;
-	size_t len_sep = strlen(sep);
-        struct str_list_item *item = NULL;
-        unsigned int i = 0;
+	char *strrw;
+	const char *val;
 
-        INIT_LIST_HEAD(list);
+        str_list_init(list);
 
-	str_p = str;
-	while((sep_in_str = strstr(str_p, sep)) != NULL)
-	{
-		item = calloc(sizeof(*item), 1);
-                item->value = strndup(str_p, (size_t)(sep_in_str - str_p));
-                list_add_tail(&(item->node), list);
-                ++i;
+	strrw = strdup(str);
 
-		str_p = sep_in_str + len_sep;
-	}
-
-        if(*str_p != '\0')
+	for(val = strtok(strrw, sep);
+            val != NULL;
+            val = strtok(NULL, sep))
         {
-                /* copy end of string */
-                item = calloc(sizeof(*item), 1);
-                item->value = strdup(str_p);
-                list_add_tail(&(item->node), list);
-                ++i;
+                if(str_list_add(list, val) != 0)
+		{
+			str_list_free(list);
+			return 0;
+		}
         }
 
-	return i;
+	return str_list_length(list);
 }
 
 const char* str_ltrim(const char *str, const char *trimchr)
@@ -241,12 +232,13 @@ long long str_toll(const char *str, char **endptr, int base, long long dfl)
         return ret;      
 }
 
-void str_list_init(struct list_head *list)
+void str_list_init(struct str_list *list)
 {
-        INIT_LIST_HEAD(list);
+        INIT_LIST_HEAD(&list->head);
+	list->count = 0;
 }
 
-int str_list_add(struct list_head *list, const char *added)
+int str_list_add(struct str_list *list, const char *str)
 {
 	struct str_list_item *item;
 
@@ -256,39 +248,66 @@ int str_list_add(struct list_head *list, const char *added)
 		return -1;
 	}
 
-	item->value = strdup(added);
+	item->value = strdup(str);
 	if(item->value == NULL)
 	{
 		free(item);
 		return -1;
 	}
 
-	list_add(&item->node, list);
+	list_add_tail(&item->node, &list->head);
+	++list->count;
+
 	return 0;
 }
 
-void str_list_free(struct list_head *list)
+int str_list_remove(struct str_list *list, const char *str)
 {
-        struct str_list_item *item1 = NULL,
-                *item2 = NULL;
+        struct str_list_item *item = NULL,
+                *item_safe = NULL;
+	int found = 0;
 
-        list_for_each_entry_safe(item1, item2, list, node)
+        list_for_each_entry_safe(item, item_safe, &list->head, node)
         {
-                free(item1->value);
-                free(item1);
-                list_del(&(item1->node));
+		if(strcmp(item->value, str) == 0)
+		{
+			free(item->value);
+			free(item);
+			list_del(&(item->node));
+			++found;
+		}
+        }
+
+	return found;
+}
+
+unsigned int str_list_length(struct str_list *list)
+{
+	return list->count;
+}
+
+void str_list_free(struct str_list *list)
+{
+        struct str_list_item *item = NULL,
+                *item_safe = NULL;
+
+        list_for_each_entry_safe(item, item_safe, &list->head, node)
+        {
+                free(item->value);
+                free(item);
+                list_del(&(item->node));
         }
 }
 
-unsigned int str_list_toarray(struct list_head *list,
+unsigned int str_list_toarray(struct str_list *list,
 			      const char **array, size_t size)
 {
-        struct str_list_item *item1 = NULL;
+        struct str_list_item *item = NULL;
         unsigned int count = 0;
 
-        list_for_each_entry(item1, list, node)
+        list_for_each_entry(item, &list->head, node)
         {
-                array[count] = item1->value;
+                array[count] = item->value;
 
 	        ++count;
 

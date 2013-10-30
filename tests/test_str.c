@@ -195,7 +195,7 @@ TEST_DEF(test_str_empty)
 
 TEST_DEF(test_str_split)
 {
-        struct list_head list;
+        struct str_list list;
         unsigned int count,
                 i;
         const char *my_string = NULL;
@@ -216,10 +216,11 @@ TEST_DEF(test_str_split)
 
         TEST_ASSERT(count == 5);
         i = 0;
-        list_for_each_entry(item, &list, node)
+        str_list_for_each_entry(&list, item)
         {
+                /* printf(" * item = %s | item_expect = %s\n", */
+		/*        item->value, items_expect[i]); */
                 TEST_ASSERT(strcmp(items_expect[i], item->value) == 0);
-                /* printf(" * item = %s\n", item->value); */
                 ++i;
         }
         TEST_ASSERT(count == i);
@@ -235,7 +236,7 @@ TEST_DEF(test_str_split)
         count = str_split(my_string, " ", &list);
         TEST_ASSERT(count == 1);
         i = 0;
-        list_for_each_entry(item, &list, node)
+        str_list_for_each_entry(&list, item)
         {
                 TEST_ASSERT(strcmp(items_expect2[i], item->value) == 0);
                 /* printf(" * item = %s\n", item->value); */
@@ -246,29 +247,23 @@ TEST_DEF(test_str_split)
 
         /* garbage in string */
         const char *items_expect3[] = {
-                "",
                 "one",
-                "",
                 "two",
-                "", "",
                 "three",
-                "","","",
                 "four",
-                "","","","",
                 "five",
-                "","","","","",
         };
 
         my_string = " one  two   three    four     five      ";
 
         count = str_split(my_string, " ", &list);
-        TEST_ASSERT(count == 5 + (1 + 1 + 2 + 3 + 4 + 5));
+        TEST_ASSERT(count == ARRAY_SIZE(items_expect3));
         i = 0;
-        list_for_each_entry(item, &list, node)
+        str_list_for_each_entry(&list, item)
         {
+                printf(" * item = %s, strlen()=%zu\n",
+                       item->value, strlen(item->value));
                 TEST_ASSERT(strcmp(items_expect3[i], item->value) == 0);
-                /* printf(" * item = %s, strlen()=%zu\n", */
-                /*        item->value, strlen(item->value)); */
                 ++i;
         }
         TEST_ASSERT(count == i);
@@ -485,7 +480,7 @@ TEST_DEF(test_str_toll)
 
 TEST_DEF(test_str_list_toarray)
 {
-	struct list_head list;
+	struct str_list list;
         unsigned int count,
                 ret,
 		i;
@@ -511,8 +506,8 @@ TEST_DEF(test_str_list_toarray)
 
 	for(i = 0; i < ARRAY_SIZE(ip_parts); ++i)
 	{
-		TEST_ASSERT(strcmp(ip_parts[i], items_expect[i]) == 0);
 		/* printf("ip[%d] = %s\n", i, ip_parts[i]); */
+		TEST_ASSERT(strcmp(ip_parts[i], items_expect[i]) == 0);
 	}
 
         str_list_free(&list);
@@ -530,27 +525,25 @@ TEST_DEF(test_str_list_toarray)
         str_list_free(&list);
 }
 
-TEST_DEF(test_str_list_add_and_foreach)
+TEST_DEF(test_str_list_add_remove)
 {
-	struct list_head str_list;
+	struct str_list str_list;
 	struct str_list_item *str_list_item;
         const char *items[] = {
                 "the world is crazy",
                 "allright",
                 "one good thing about music",
                 "when it hurts you, you feel no pain",
+                "allright",
         };
         unsigned int found,
 		i;
-	int ret;
 
 	str_list_init(&str_list);
 
 	for(i = 0; i < ARRAY_SIZE(items); ++i)
 	{
-		ret = str_list_add(&str_list, items[i]);
-
-		TEST_ASSERT(ret == 0);
+		TEST_ASSERT(str_list_add(&str_list, items[i]) == 0);
 	}
 
 	str_list_for_each_entry(&str_list, str_list_item)
@@ -568,6 +561,19 @@ TEST_DEF(test_str_list_add_and_foreach)
 
 		TEST_ASSERT(found);
 	}
+
+	TEST_ASSERT(str_list_remove(&str_list, "allright") == 2);
+
+	found = 0;
+	str_list_for_each_entry(&str_list, str_list_item)
+	{
+		if(strcmp(str_list_item->value, "allright") == 0)
+		{
+			++found;
+		}
+	}
+
+	TEST_ASSERT(found == 0);
 
 	str_list_free(&str_list);
 }
@@ -600,7 +606,7 @@ int main(void)
         TEST_RUN(test_str_toll);
 
         TEST_RUN(test_str_list_toarray);
-        TEST_RUN(test_str_list_add_and_foreach);
+        TEST_RUN(test_str_list_add_remove);
 
         return TEST_MODULE_RETURN;
 }
