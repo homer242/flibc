@@ -114,13 +114,13 @@ unsigned int str_split(const char *str, const char *sep,
 		*sep_in_str = NULL;
 	size_t len_sep = strlen(sep);
 
+        str_list_init(list);
+
 	strrw = strdup(str);
 	if(strrw == NULL)
 	{
 		return 0;
 	}
-
-        str_list_init(list);
 
 	strrw_p = strrw;
 	while((sep_in_str = strstr(strrw_p, sep)) != NULL)
