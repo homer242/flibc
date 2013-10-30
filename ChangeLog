@@ -1,3 +1,9 @@
+flibc 0.3.0:
+	* major API change in str_list_ functions (need migration)
+	* new struct str_list
+	* add str_list_remove and str_list_count functions
+	* behaviour change: str_split() creates a list of NONEMPTY item(s)
+
 flibc 0.2.7:
 	* add missing io.h header
 	* add str_list_add and str_list_for_each_entry functions
